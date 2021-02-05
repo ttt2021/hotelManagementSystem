@@ -15,13 +15,13 @@
         <div class="login-wrapper">
           <van-cell-group class="login-box">
             <van-field
-              v-model="username"
+              v-model="workNum"
               clearable
-              label="用户名"
-              left-icon="phone-circle-o"
-              placeholder="请输入用户名"
-              type="username"
-              :rules="[{ required: true, message: '请输入用户名' }]"
+              label="工号"
+              left-icon="user-circle-o"
+              placeholder="请输入工号"
+              type="text"
+              :rules="[{ required: true, message: '请输入工号' }]"
             />
             <van-field
               v-model="pwd"
@@ -53,20 +53,31 @@
                 <img-verify ref="verifyRef"></img-verify>
               </template>
             </van-field>
+
+            <!-- <van-radio-group v-model="radio">
+              <van-radio name="1" class="radio-left">员工</van-radio>
+              <van-radio name="2">管理员</van-radio>
+            </van-radio-group> -->
           </van-cell-group>
 
           <van-row>
-            <van-button type="default" size="small" @click="forgetPassowrd" v-if="!isForget">返回登录</van-button>
+            <van-button
+              type="default"
+              size="small"
+              @click="forgetPassowrd"
+              v-if="!isForget"
+              >返回登录</van-button
+            >
             <van-button
               type="primary"
               size="small"
               :class="[!isForget ? 'btn-login' : 'forget-btn']"
-              @click="handleLogin"
-              >{{ isForget ? "登录" : "修改并登录" }}</van-button
+              @click="isForget ? handleLogin() : modifyPwd()"
+              >{{ isForget ? "登录" : "立即修改" }}</van-button
             >
           </van-row>
 
-          <div class="remember-wrapper">
+          <div class="remember-wrapper" v-if="isForget">
             <van-checkbox v-model="checked" shape="square">记住我</van-checkbox>
             <span class="forget-pwd" @click="forgetPassowrd">忘记密码</span>
           </div>
@@ -78,36 +89,159 @@
 
 <script>
 import imgVerify from "../../components/imgVerify.vue";
+import crypto from "crypto";
 export default {
   components: {
     imgVerify,
   },
   data() {
     return {
-      username: "",
+      workNum: "",
       pwd: "",
-      rePwd: "", 
+      rePwd: "",
       isForget: true, // 是否忘记
-      verifyRef: null, 
+      verifyRef: null,
       verify: "", // 验证码
-      checked: false // 记住我
+      // radio: "1",
+      checked: false, // 记住我
     };
   },
   mounted() {
     // 进入页面时判断是否"记住我"这个用户，如果有，就填充表单
-    let RememberUser = localStorage.getItem('RememberUser');
-    
+    let RememberUser = localStorage.getItem("RememberUser");
+    // console.log(RememberUser)
+    if (RememberUser !== null) {
+      let userinfo = JSON.parse(RememberUser);
+      console.log(userinfo);
+      //根据给定的算法和密钥，创建并返回解密对象
+      let decipher = crypto.createDecipher("aes192", "hotelAdmin");
+      let tmpPass = decipher.update(userinfo.password, "hex", "utf8");
+      tmpPass += decipher.final("utf8"); // 密码
+      // console.log(tmpPass)
+
+      this.workNum = userinfo.workNum;
+      this.pwd = tmpPass;
+    }
   },
   methods: {
+    modifyPwd() {
+      // 校验
+      if (
+        this.workNum.trim() === "" ||
+        this.pwd.trim() === "" ||
+        this.verify.trim() === "" ||
+        this.rePwd.trim() === ""
+      ) {
+        this.$toast.fail("用户名或密码或验证码不能为空");
+        return;
+      }
+      if (
+        this.verify.toLowerCase() !==
+        this.$refs.verifyRef.identifyCode.toLowerCase()
+      ) {
+        this.$toast.fail("验证码输入有误");
+        return;
+      }
+      if (this.rePwd !== this.pwd) {
+        this.$toast.fail("两次输入密码不一致！");
+        return;
+      }
+      this.showLoginTip("修改中..."); // 修改加载
+      this.modify();
+    },
+    modify() {
+      this.$http
+        .modifyPwd({
+          workNum: this.workNum,
+          password: this.pwd,
+        })
+        .then((res) => {
+          console.log(res);
+          this.$toast.clear(); // 修改加载消失
+          res = JSON.parse(res);
+          if (res.code == 1) {
+            // 转到登录状态
+            this.isForget = !this.isForget;
+            // 清空信息，更新验证码
+            this.workNum = "";
+            this.pwd = "";
+            this.rePwd = "";
+            this.verify = "";
+            this.$refs.verifyRef.handleDraw();
+            this.$toast.success("修改成功，请登录");
+          }
+        })
+        .catch((err) => {
+          this.$message({
+            showClose: true,
+            message: "网络请求失败",
+            type: "error",
+          });
+        });
+    },
     forgetPassowrd() {
       this.isForget = !this.isForget;
       // console.log(this.$refs.verifyRef.identifyCode) // 获取验证码图片上字符串
       this.$refs.verifyRef.handleDraw(); // 父组件调用子组件方法
     },
+    login() {
+      this.$http
+        .login({
+          workNum: this.workNum,
+          password: this.pwd,
+        })
+        .then((res) => {
+          console.log(res);
+          // 将字符串对象转成对象
+          res = JSON.parse(res);
+
+          // 账号不存在情况下
+          if (res.code === 0) {
+            this.$toast.fail(res.msg);
+            this.pwd = "";
+            this.workNum = "";
+            this.verify = "";
+            this.$refs.verifyRef.handleDraw();
+          }
+
+          // 账号密码均匹配
+          if (this.checked) {
+            // 如果选择了remember，将账号密码存入本地存储中
+            //根据给定的算法和密钥，创建并返回加密对象
+            let obj = crypto.createCipher("aes192", "hotelAdmin"); //第二个参数为密钥，所有密钥都要相同
+            //输入数据为utf8格式，输出格式为hex
+            let aesPassword = obj.update(this.pwd, "utf8", "hex");
+            //返回所有加密过的内容
+            aesPassword += obj.final("hex");
+            // console.log(aesPassword)
+            let workNum = res.data.workNum;
+            let password = aesPassword;
+            let user = {
+              workNum: workNum,
+              password: password,
+            };
+            // console.log(user)
+            // 保存到本地
+            localStorage.setItem("RememberUser", JSON.stringify(user));
+          }
+          this.$toast.clear(); // 登录加载消失
+          // 临时存储在本地，关闭系统时移除
+          localStorage.setItem("token", JSON.stringify(res.data));
+          // 路由跳转到首页
+          this.$router.push("/home");
+        })
+        .catch((err) => {
+          this.$message({
+            showClose: true,
+            message: "网络请求失败",
+            type: "error",
+          });
+        });
+    },
     handleLogin() {
       // 校验
       if (
-        this.username.trim() === "" ||
+        this.workNum.trim() === "" ||
         this.pwd.trim() === "" ||
         this.verify.trim() === ""
       ) {
@@ -126,13 +260,7 @@ export default {
         // 登录
         this.showLoginTip("登录中..."); // 登录加载
         // 发起接口请求
-      } else {
-        // 忘记密码
-        if (this.rePwd !== this.pwd) {
-          this.$toast.fail("两次输入密码不一致！");
-          return;
-        }
-        this.showLoginTip("修改登录中...");
+        this.login();
       }
     },
     showLoginTip() {
@@ -288,6 +416,10 @@ export default {
   margin-top: 12px;
 }
 
+.radio-left {
+  margin-right: 60px;
+}
+
 /deep/.van-field__control {
   font-size: 12px;
 }
@@ -298,5 +430,30 @@ export default {
 
 /deep/.van-checkbox__label {
   font-size: 12px;
+}
+
+/deep/.van-radio-group {
+  background: linear-gradient(
+    to bottom right,
+    rgba(250, 250, 210, 0.5),
+    rgba(255, 255, 224, 0.5)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 0;
+}
+
+/deep/.van-radio__label {
+  margin-left: 3px;
+}
+
+/deep/.van-radio {
+  font-size: 12px;
+}
+
+/deep/.van-radio-group .van-icon-success {
+  font-size: 12px;
+  margin-top: 3px;
 }
 </style>

@@ -14,11 +14,11 @@ const routes = [
     name: 'login',
     component: login
   },
-  // {
-  //   path: '/home',
-  //   name: 'home',
-  //   component: () => import('@/views/home/index.vue')
-  // },
+  {
+    path: '/home',
+    name: 'home',
+    component: () => import('@/views/home/index.vue')
+  },
   // {
   //   path: '/catering',
   //   name: 'catering',

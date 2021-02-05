@@ -1,5 +1,5 @@
 import apiLogin from './interface/login';
-import apiRegister from './interface/register';
+import apiModifyPwd from './interface/modifyPwd';
 
 const install = Vue => {
 	if (install.installed) {
@@ -13,7 +13,7 @@ const install = Vue => {
 				return Object.assign(  // assign->拼接
 					{},
 					apiLogin,
-					apiRegister
+					apiModifyPwd
 				)
 			}
 		}
