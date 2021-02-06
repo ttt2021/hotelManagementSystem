@@ -2,23 +2,14 @@
   <div class="wrapper">
     <div class="slanty-top">
       <img class="bg-img" src="@/assets/top.jpg" />
-      <div class="welcome">
-      <div class="hotel-title">暖
-        <div class="like-logo">
-          <img class="like" src="@/assets/like.png" />
-        </div>居家酒店
-      </div>
-      <div class="come">欢迎您</div>
     </div>
-    </div>
-    <!-- <div class="like-logo">
+    <div class="like-logo">
       <img class="like" src="@/assets/like.png" />
-    </div> -->
-    <!-- <div class="welcome">
+    </div>
+    <div class="welcome">
       <div class="hotel-title">暖心居家酒店</div>
       <div class="come">欢迎您</div>
-    </div> -->
-    <div class="slanty-right">
+    </div>
       <div class="slanty-down">
         <div class="block">
           <div class="login-wrapper">
@@ -95,7 +86,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 
@@ -289,7 +279,7 @@ export default {
 
 <style lang="less" scoped>
 .slanty-top {
-  height: 60vh;
+  height: 40vh;
   width: 100%;
   -webkit-transform: skew(0, 20deg);
   -ms-transform: skew(0, 10deg);
@@ -304,52 +294,35 @@ export default {
   z-index: -100;
 }
 
-// .like {
-//   position: absolute;
-//   width: 55px;
-//   height: 55px;
-//   z-index: 1;
-//   margin-top: -300px;
-//   margin-left: 508px;
-// }
+.like {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  z-index: 1;
+  margin-top: -30px;
+  margin-left: 160px;
+}
 
 .welcome {
   position: absolute;
   z-index: 10;
-  height: 30vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .hotel-title {
-  display: flex;
-  align-items: center;
-  font-family: '楷体';
-  font-size: 48px;
+  width: 2px;
+  height: 16px;
+  margin-left: 320px;
+  font-size: 18px;
   color: #ff0592;
 }
 
 .come {
-  margin-left: 10px;
-  font-size: 28px;
-  font-family: '楷体';
+  width: 2px;
+  height: 18px;
+  margin-left: 290px;
+  font-size: 16px;
   color: #ee00ee;
   margin-top: 15px;
-}
-
-.slanty-right {
-  -webkit-transform: skew(0, 10deg);
-  -ms-transform: skew(0, 10deg);
-  transform: skew(0, 10deg);
-  background: linear-gradient(
-    to bottom right,
-    rgba(0, 178, 238, 0.5),
-    rgba(125, 206, 255, 0.5)
-  );
-  z-index: -999;
-  height: 100vh;
 }
 
 .slanty-down {
@@ -372,20 +345,15 @@ export default {
 }
 
 .login-wrapper {
-  width: 100%;
-  position: absolute;
-  margin-top: -134px;
-  // -webkit-transform: skew(0, 10deg);
-  // -ms-transform: skew(0, 10deg);
-  // transform: skew(0, 10deg);
+  -webkit-transform: skew(0, 10deg);
+  -ms-transform: skew(0, 10deg);
+  transform: skew(0, 10deg);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  // padding-top: 22vh;
+  padding-top: 22vh;
   overflow: auto;
-  background: rgba(0, 178, 238, 0.5);
-  padding: 20px 0;
 }
 
 .login-box {
