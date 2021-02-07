@@ -16,10 +16,30 @@
     </div>
     <div class="menu">
       <el-menu
-        :default-active="menuIndex"
+        :default-active="bMenuIndex"
         class="el-menu-vertical-demo"
         :collapse="asideStatus"
       >
+        <el-submenu index="1">
+          <template slot="title">
+            <i class="el-icon-location"></i>
+            <span slot="title">导航一</span>
+          </template>
+        </el-submenu>
+        <el-submenu index="2">
+          <template slot="title">
+            <i class="el-icon-user"></i>
+            <span slot="title">个人中心</span>
+          </template>
+          <el-menu-item index="2-1">修改资料</el-menu-item>
+          <el-menu-item index="2-2">设置头像</el-menu-item>
+          <!-- <router-link to="/home/updatePwd"> -->
+            <el-menu-item index="2-3">
+              <i class="el-icon-key"></i>
+              <span slot="title">修改密码</span>
+            </el-menu-item>
+          <!-- </router-link> -->
+        </el-submenu>
         <!-- <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-location"></i>
@@ -56,30 +76,25 @@ export default {
     return {
       asideWidth: 200,
       asideStatus: false,
-      menuIndex: "1",
+      bMenuIndex: '2-3'
     };
   },
   mounted() {
-    // let router=this.$route.path;
-    // switch(router){
-    //   case '/':
-    //     this.bMenuIndex='1';
-    //   break;
-    //   case '/test':
-    //     this.bMenuIndex='2';
-    //   break;
-    //   case '/history':
-    //     this.bMenuIndex='3';
-    //   break;
-    //   case '/statistics':
-    //     this.bMenuIndex='4';
-    //   break;
-    //   case '/roomInfor':
-    //     this.bMenuIndex='5';
-    //   break;
-    //   default:
-    //     this.bMenuIndex='1';
-    // }
+    let router = this.$route.path;
+    switch (router) {
+    //   case "/updateInfo":
+    //     this.menuIndex = "2-1";
+    //     break;
+    //   case "/setAvatar":
+    //     this.menuIndex = "2-2";
+    //     break;
+      case "/home/updatePwd":
+        this.bMenuIndex = '2-3';
+        break;
+      default:
+        this.bMenuIndex = "2-3";
+    }
+    console.log(router)
     this.asideStatus = localStorage.getItem("asideStatus");
     console.log(this.asideStatus);
     if (this.asideStatus === null) {
@@ -110,15 +125,6 @@ export default {
   align-items: center;
 }
 
-// .el-menu-vertical-demo:not(.el-menu--collapse) {
-//   width: 200px;
-//   min-height: 400px;
-// }
-
-// .el-menu-vertical-demo {
-
-// }
-
 .hotel-logo {
   .display();
 }
@@ -128,7 +134,7 @@ export default {
 }
 
 .menu {
-  background:	#4682B4;
+  background: #4682b4;
   height: calc(100vh - 50px);
 }
 
@@ -141,13 +147,13 @@ export default {
   font-weight: bold;
   color: #ff0592;
   justify-content: center;
-  background:	#F5F5DC;
+  background: #f5f5dc;
 }
 
 .hotel-foldLogo {
   width: 65px;
   height: 50px;
-  background: #F0FFF0;
+  background: #f5f5dc;
   .display();
   justify-content: center;
 }
@@ -155,5 +161,46 @@ export default {
 .like {
   width: 30px;
   height: 30px;
+}
+
+.el-menu-item {
+  background: #fff;
+}
+
+/deep/.el-menu {
+  background-color: #4682b4;
+  opacity: .9;
+}
+
+/deep/.el-submenu__title {
+  color: #ffffff;
+}
+
+/deep/.el-submenu__title i {
+  color: #ffffff;
+  opacity: .9;
+}
+
+/deep/.el-submenu__icon-arrow {
+  color: #ffffff;
+}
+
+// /deep/.el-submenu__title {
+//   border-bottom: 1px solid #ffffff;
+// }
+
+/deep/.el-submenu__title:focus, /deep/.el-submenu__title:hover {
+  background-color: #ffffff;
+  color: #4682b4;
+}
+
+/deep/.el-submenu__title:focus /deep/.el-submenu__icon-arrow, 
+/deep/.el-submenu__title:hover /deep/.el-submenu__icon-arrow {
+  color: #4682b4;
+}
+
+/deep/.el-submenu__title:focus i, 
+/deep/.el-submenu__title:hover i {
+  color: #4682b4;
 }
 </style>

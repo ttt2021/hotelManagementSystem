@@ -17,7 +17,32 @@ const routes = [
   {
     path: '/home',
     name: 'home',
-    component: () => import('@/views/home/index.vue')
+    meta: {
+      loginRequest: true
+    },
+    component: () => import('@/views/home/index.vue'),
+    children: [
+      // {
+      //   path:'/home',
+      //   redirect: '/home/community'
+      // },
+      {
+        path:'home/updatePassword',
+        name: 'updatePassword',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/updatePassword/index.vue')
+      }
+    ]
+  },
+  {
+    path: '/lock',
+    name: 'lock',
+    meta: {
+      loginRequest: true
+    },
+    component: () => import('@/views/lock/index.vue')
   },
   // {
   //   path: '/catering',

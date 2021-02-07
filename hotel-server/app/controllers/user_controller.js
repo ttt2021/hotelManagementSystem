@@ -4,6 +4,7 @@ const password_col = require('../models/password')
 const passport = require('../utils/passport')
 const config = require('../../config')
 
+// 登录
 const login = async(ctx) => {
   console.log(ctx.request.body)
   let req = ctx.request.body
@@ -60,6 +61,7 @@ const login = async(ctx) => {
   }
 }
 
+// 修改密码
 const modifyPwd = async(ctx) => {
   console.log(ctx.request.body)
   let req = ctx.request.body
@@ -103,7 +105,46 @@ const modifyPwd = async(ctx) => {
   }
 }
 
+// 退出系统
+const logout = async(ctx) => {
+  // 日志后再做
+  console.log(ctx.request)
+}
+
+// 解锁
+const unlock = async(ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+  // 获取到用户userId
+  let userId = req.userId
+
+  // 查询密码
+  const passwd = await password_col.findOne({
+    userId
+  }, {
+    hash: 1
+  })
+  console.log(passwd)
+  // 匹配密码是否一致
+  const match = await passport.validate(req.password, passwd.hash)
+  console.log(match)
+  if (match) { // 匹配成功
+    ctx.body = {
+      code: 1,
+      msg: '欢迎登录'
+    }
+    return
+  } else { // 匹配失败
+    ctx.body = {
+      code: 0,
+      msg: '密码错误'
+    }
+  }
+}
+
 module.exports = {
   login,
-  modifyPwd
+  modifyPwd,
+  logout,
+  unlock
 }

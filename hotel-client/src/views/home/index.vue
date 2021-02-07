@@ -3,9 +3,9 @@
     <el-container>
       <Aside></Aside>
       <el-container>
-          <Header :userinfo.sync="userinfo"></Header>
-        <el-main>Main</el-main>
-        <el-footer>Footer</el-footer>
+        <Header :userinfo.sync="userinfo"></Header>
+        <el-main><router-view></router-view></el-main>
+        <el-footer style="height: 0px"></el-footer>
       </el-container>
     </el-container>
   </div>
@@ -17,7 +17,7 @@ import Aside from "../../components/aside.vue";
 export default {
   components: {
     Header,
-    Aside
+    Aside,
   },
   data() {
     return {
@@ -40,8 +40,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.el-container {
-  width: 100%;
-  height: 100vh;
-}
 </style>

@@ -1,5 +1,6 @@
 const Koa = require('koa')
 const cors = require('koa2-cors')
+const session = require('koa-session')
 const bodyParser = require('koa-bodyparser')  // 解析参数
 const mongoose = require('mongoose')  // 做mongodb连接
 const config = require('./config')
@@ -17,6 +18,12 @@ mongoose.connect(config.db, { useNewUrlParser: true }, (err) => {
 
 app.use(cors()); // 解决跨域
 app.use(bodyParser()); // 帮助koa解析参数
+app.use(session({      //使用session
+  key: 'koa.sess',
+  maxAge: 1000 * 60 * 30, //设置cookie最大时长
+  renew: false,
+  secure: true
+}, app))
 
 const user_router = require('./routes/api/user_router')
 app.use(user_router.routes())

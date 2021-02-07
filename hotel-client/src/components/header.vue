@@ -4,14 +4,14 @@
       <van-icon name="bars" @click="changeAside" />
     </el-radio-button>
     <div class="user-wrapper">
-      <el-dropdown>
+      <el-dropdown trigger="click" @command="dropdownComm">
         <span class="el-dropdown-link">
           {{ userinfo.username }}
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item command="">锁定系统</el-dropdown-item>
-          <el-dropdown-item command="">退出系统</el-dropdown-item>
+          <el-dropdown-item command="lock">锁定系统</el-dropdown-item>
+          <el-dropdown-item command="logout">退出系统</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <div class="user-avatar">
@@ -57,6 +57,47 @@ export default {
         localStorage.setItem("asideStatus", false);
       }
     },
+    dropdownComm(command) {
+      console.log(command);
+      switch (command) {
+        case "lock": //锁定系统
+          localStorage.setItem("lock", true);
+          // this.$message({
+          //   showClose: true,
+          //   message: "系统已被锁定",
+          //   type: "success"
+          // });
+          this.$router.push({
+            path: "/lock",
+            query: {
+              redirect: this.$route.fullPath, // 把要跳转的页面路径作为参数传到锁定页面
+            }
+          });
+          break;
+        case "logout": //退出系统
+          this.$http.logout({}).then((res) => {
+            console.log(res);
+          });
+          //     this.$http.post('http://10.21.40.155:3000/logout').then(res=>{
+          //       if(res.data.code===200){
+          //         this.$message({
+          //           showClose:true,
+          //           message:res.data.msg,
+          //           type:'success'
+          //         })
+          //         window.localStorage.removeItem('loginToken');
+          //         this.$router.push({path:'/login'})
+          //       }else{
+          //         this.$message({
+          //           showClose:true,
+          //           message:res.data.msg,
+          //           type:'error'
+          //         })
+          //       }
+          //     })
+          break;
+      }
+    },
   },
 };
 </script>
@@ -70,10 +111,11 @@ export default {
 .el-header {
   width: 100%;
   height: 50px !important;
-  background: #F5F5DC;
+  background: #f5f5dc;
   .display();
   justify-content: space-between;
   padding-left: 10px;
+  border-left: 1px solid #fff;
 }
 
 .user-wrapper {

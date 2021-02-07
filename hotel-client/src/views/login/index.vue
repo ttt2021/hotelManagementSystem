@@ -25,7 +25,6 @@
             <van-cell-group class="login-box">
               <van-field
                 v-model="workNum"
-                clearable
                 label="工号"
                 left-icon="user-circle-o"
                 placeholder="请输入工号"
@@ -44,7 +43,6 @@
               <van-field
                 v-model="rePwd"
                 v-show="!isForget"
-                clearable
                 label="重复密码"
                 left-icon="smile-o"
                 placeholder="请再次输入密码"
@@ -239,8 +237,10 @@ export default {
           this.$toast.clear(); // 登录加载消失
           // 临时存储在本地，关闭系统时移除
           localStorage.setItem("token", JSON.stringify(res.data));
-          // 路由跳转到首页
-          this.$router.push("/home");
+          // 获取路由携带的参数，若无则跳到首页
+          let redirect = decodeURIComponent(this.$route.query.redirect || '/home')
+          // 路由跳转
+          this.$router.push(redirect);
         })
         .catch((err) => {
           this.$message({

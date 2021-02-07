@@ -1,5 +1,7 @@
 import apiLogin from './interface/login';
 import apiModifyPwd from './interface/modifyPwd';
+import apiLogout from './interface/logout';
+import apiUnlock from './interface/unlock';
 
 const install = Vue => {
 	if (install.installed) {
@@ -13,7 +15,9 @@ const install = Vue => {
 				return Object.assign(  // assign->拼接
 					{},
 					apiLogin,
-					apiModifyPwd
+					apiModifyPwd,
+					apiLogout,
+					apiUnlock
 				)
 			}
 		}
