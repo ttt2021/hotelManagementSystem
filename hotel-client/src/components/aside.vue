@@ -16,29 +16,30 @@
     </div>
     <div class="menu">
       <el-menu
-        :default-active="bMenuIndex"
+        :default-active="$route.path"
+        router
         class="el-menu-vertical-demo"
         :collapse="asideStatus"
+        @select="handleSelect"
       >
-        <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span slot="title">导航一</span>
-          </template>
-        </el-submenu>
+        <el-menu-item index="/home" class="firstMenu">
+          <i class="el-icon-key"></i>
+          <span slot="title">首页</span>
+        </el-menu-item>
         <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-user"></i>
             <span slot="title">个人中心</span>
           </template>
           <el-menu-item index="2-1">修改资料</el-menu-item>
-          <el-menu-item index="2-2">设置头像</el-menu-item>
-          <!-- <router-link to="/home/updatePwd"> -->
-            <el-menu-item index="2-3">
-              <i class="el-icon-key"></i>
-              <span slot="title">修改密码</span>
-            </el-menu-item>
-          <!-- </router-link> -->
+          <el-menu-item index="/home/updateAvatar">
+            <i class="el-icon-picture-outline"></i>
+            <span slot="title">设置头像</span>
+          </el-menu-item>
+          <el-menu-item index="/home/updatePassword">
+            <i class="el-icon-key"></i>
+            <span slot="title">修改密码</span>
+          </el-menu-item>
         </el-submenu>
         <!-- <el-submenu index="1">
           <template slot="title">
@@ -76,25 +77,10 @@ export default {
     return {
       asideWidth: 200,
       asideStatus: false,
-      bMenuIndex: '2-3'
+      bMenuIndex: "2-1",
     };
   },
   mounted() {
-    let router = this.$route.path;
-    switch (router) {
-    //   case "/updateInfo":
-    //     this.menuIndex = "2-1";
-    //     break;
-    //   case "/setAvatar":
-    //     this.menuIndex = "2-2";
-    //     break;
-      case "/home/updatePwd":
-        this.bMenuIndex = '2-3';
-        break;
-      default:
-        this.bMenuIndex = "2-3";
-    }
-    console.log(router)
     this.asideStatus = localStorage.getItem("asideStatus");
     console.log(this.asideStatus);
     if (this.asideStatus === null) {
@@ -115,6 +101,12 @@ export default {
         this.asideWidth = 200;
       }
     });
+  },
+  methods: {
+    // 导航栏选项事件
+    handleSelect(key, keyPath) {
+      this.$router.push(key);
+    },
   },
 };
 </script>
@@ -167,9 +159,9 @@ export default {
   background: #fff;
 }
 
-/deep/.el-menu {
+.el-menu {
   background-color: #4682b4;
-  opacity: .9;
+  opacity: 0.9;
 }
 
 /deep/.el-submenu__title {
@@ -178,29 +170,35 @@ export default {
 
 /deep/.el-submenu__title i {
   color: #ffffff;
-  opacity: .9;
+  opacity: 0.9;
 }
 
-/deep/.el-submenu__icon-arrow {
-  color: #ffffff;
-}
-
-// /deep/.el-submenu__title {
-//   border-bottom: 1px solid #ffffff;
-// }
-
-/deep/.el-submenu__title:focus, /deep/.el-submenu__title:hover {
+/deep/.el-submenu__title:focus,
+/deep/.el-submenu__title:hover {
   background-color: #ffffff;
   color: #4682b4;
 }
 
-/deep/.el-submenu__title:focus /deep/.el-submenu__icon-arrow, 
-/deep/.el-submenu__title:hover /deep/.el-submenu__icon-arrow {
+/deep/.el-submenu__title:focus i,
+/deep/.el-submenu__title:hover i {
   color: #4682b4;
 }
 
-/deep/.el-submenu__title:focus i, 
-/deep/.el-submenu__title:hover i {
-  color: #4682b4;
+.firstMenu.el-menu-item {
+  background: #4682b4;
+  color: #fff;
+}
+
+.firstMenu.el-menu-item i {
+  color: #fff;
+}
+
+.firstMenu.el-menu-item.is-active {
+  background: #fff;
+  color: #409eff;
+}
+
+.el-menu-item.is-active i {
+  color: #409eff;
 }
 </style>

@@ -66,6 +66,12 @@
     - 匹配失败，则提示密码错误
   3. 匹配成功时，改变本地存储的锁定状态
 
+- Aside.vue 菜单栏
+1. 个人中心
+  - 修改资料
+  - 设置头像 updateAvatar.vue
+  - 修改密码 updatePassword.vue
+
 
 
 # hotel-cleaner 清洁工系统 移动端版
@@ -98,9 +104,11 @@
 
 
 
-注意： 
+难点注意点： 
   1. 登录拦截 实现用户登录后才可访问该页面
     - 在路由器 router 下的 index.js 的配置中，给需要拦截登录的页面的路由添加一个 meta: { loginRequest: true }，loginRequest 自定义遍历
     - 在 main.js 中添加 路由的 beforeEach 钩子函数 (三个参数 to from next)
       1. 判断即将进入的目标路由 meta 中 loginRequest，为 true 则将其进行拦截，否则则直接进入页面
       2. 拦截后，判断本地存储是否存入登录的信息，若存储了，则直接进入页面，否则则跳转到登录页面，并记住要跳入的页面，以方便登录后直接进入该页面
+
+  2. 图片剪切分片上传

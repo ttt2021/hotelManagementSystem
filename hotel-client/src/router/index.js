@@ -27,7 +27,15 @@ const routes = [
       //   redirect: '/home/community'
       // },
       {
-        path:'home/updatePassword',
+        path:'/home/updateAvatar',
+        name: 'updateAvatar',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/updateAvatar/index.vue')
+      },
+      {
+        path:'/home/updatePassword',
         name: 'updatePassword',
         meta: {
           loginRequest: true

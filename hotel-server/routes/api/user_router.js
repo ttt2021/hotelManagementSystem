@@ -7,5 +7,7 @@ router.post('/login', user_controller.login)// 拿到前端传过来的参数，
 router.post('/modifyPwd', user_controller.modifyPwd)
 router.post('/logout', user_controller.logout)
 router.post('/unlock', user_controller.unlock)
+router.post('/updatePassword', user_controller.updatePassword)
+router.post('/uploadAvatar', user_controller.uploadAvatar)
 
 module.exports = router

@@ -1,7 +1,9 @@
 import apiLogin from './interface/login';
 import apiModifyPwd from './interface/modifyPwd';
 import apiLogout from './interface/logout';
+import apiUpdatePassword from './interface/updatePassword';
 import apiUnlock from './interface/unlock';
+import apiUploadAvatar from './interface/uploadAvatar';
 
 const install = Vue => {
 	if (install.installed) {
@@ -17,7 +19,9 @@ const install = Vue => {
 					apiLogin,
 					apiModifyPwd,
 					apiLogout,
-					apiUnlock
+					apiUnlock,
+					apiUpdatePassword,
+					apiUploadAvatar
 				)
 			}
 		}
