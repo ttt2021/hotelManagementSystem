@@ -68,9 +68,14 @@
 
 - Aside.vue 菜单栏
 1. 个人中心
-  - 修改资料
+  - 修改资料 updateInfo.vue
   - 设置头像 updateAvatar.vue
+    1. 上传图片 el-upload，上传成功后将图片地址赋值给裁剪框显示图片
+    2. 裁剪图片 vueCropper 插件，实时预览，获取图片 base64 数据
+    3. 传图片 base64 数据到服务端，服务端更新数据库信息，前端接收到反馈后，更新本地存储
   - 修改密码 updatePassword.vue
+    1. 匹配原始密码
+    2. 更新密码
 
 
 
@@ -86,8 +91,9 @@
 
 # hotel-server 服务端
   - 使用 koa 技术 + MongoDB 数据库
-  - 使用 koa2-cors 解决跨域问题
+  - 使用 @koa/cors 解决跨域问题
   - 利用 koa-bodyparser 帮助 koa 做参数解析
+  - 利用 koa-body 解决数据请求过大问题
 
 1. 用户控制层 user_controller
   - 检验用户登录
@@ -110,5 +116,3 @@
     - 在 main.js 中添加 路由的 beforeEach 钩子函数 (三个参数 to from next)
       1. 判断即将进入的目标路由 meta 中 loginRequest，为 true 则将其进行拦截，否则则直接进入页面
       2. 拦截后，判断本地存储是否存入登录的信息，若存储了，则直接进入页面，否则则跳转到登录页面，并记住要跳入的页面，以方便登录后直接进入该页面
-
-  2. 图片剪切分片上传

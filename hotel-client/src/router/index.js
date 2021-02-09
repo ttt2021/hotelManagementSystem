@@ -4,6 +4,11 @@ import login from '@/views/login'
 
 Vue.use(VueRouter)
 
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
+
 const routes = [
   {
     path: '/',
@@ -27,7 +32,23 @@ const routes = [
       //   redirect: '/home/community'
       // },
       {
-        path:'/home/updateAvatar',
+        path: '/home/position',
+        name: 'position',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/position/index.vue')
+      },
+      {
+        path: '/home/updateInfo',
+        name: 'updateInfo',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/updateInfo/index.vue')
+      },
+      {
+        path: '/home/updateAvatar',
         name: 'updateAvatar',
         meta: {
           loginRequest: true
@@ -35,7 +56,7 @@ const routes = [
         component: () => import('@/views/updateAvatar/index.vue')
       },
       {
-        path:'/home/updatePassword',
+        path: '/home/updatePassword',
         name: 'updatePassword',
         meta: {
           loginRequest: true

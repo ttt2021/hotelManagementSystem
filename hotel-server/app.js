@@ -1,6 +1,7 @@
 const Koa = require('koa')
-const cors = require('koa2-cors')
+const cors = require('@koa/cors')
 const session = require('koa-session')
+const koaBody = require('koa-body');
 const bodyParser = require('koa-bodyparser')  // 解析参数
 const mongoose = require('mongoose')  // 做mongodb连接
 const config = require('./config')
@@ -17,7 +18,16 @@ mongoose.connect(config.db, { useNewUrlParser: true }, (err) => {
 })
 
 app.use(cors()); // 解决跨域
-app.use(bodyParser()); // 帮助koa解析参数
+// 解决数据请求过大问题
+app.use(koaBody({
+    multipart: true,
+    formLimit:"10mb",
+    jsonLimit:"10mb"
+}));
+app.use(bodyParser({
+    formLimit:"10mb",
+    jsonLimit:"10mb"
+})); // 帮助koa解析参数
 app.use(session({      //使用session
   key: 'koa.sess',
   maxAge: 1000 * 60 * 30, //设置cookie最大时长
@@ -26,6 +36,8 @@ app.use(session({      //使用session
 }, app))
 
 const user_router = require('./routes/api/user_router')
+const position_router = require('./routes/api/position_router')
 app.use(user_router.routes())
+app.use(position_router.routes())
 
 app.listen(config.port)  // 监听端口

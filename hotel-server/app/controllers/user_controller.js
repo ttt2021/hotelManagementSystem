@@ -92,7 +92,7 @@ const modifyPwd = async (ctx) => {
   // 修改密码
   const result = await password_col.updateOne({ userId }, { hash })
   console.log(result)
-  if (result) {
+  if (result.ok == 1) {
     ctx.body = {
       code: 1,
       msg: '修改成功'
@@ -184,7 +184,7 @@ const updatePassword = async (ctx) => {
 }
 
 const uploadAvatar = async (ctx) => {
-  console.log(ctx.request.body)
+  // console.log(ctx.request.body)
   let req = ctx.request.body
 
   const user = await user_col.findOne({
@@ -196,7 +196,8 @@ const uploadAvatar = async (ctx) => {
   console.log(user)
 
   const result = await user_col.updateOne({ userId: req.userId }, { avatar: req.avatar })
-  if (result) {
+  console.log(result)
+  if (result.ok == 1) {
     ctx.body = {
       code: 1,
       msg: '设置成功'

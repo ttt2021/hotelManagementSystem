@@ -28,10 +28,27 @@
         </el-menu-item>
         <el-submenu index="2">
           <template slot="title">
+            <i class="iconfont icon-peopleInfo"></i>
+            <span slot="title">员工信息管理</span>
+          </template>
+          <el-menu-item index="/home/updateInfo">
+            <i class="iconfont icon-user-cog"></i>
+            <span slot="title">员工管理</span>
+          </el-menu-item>
+          <el-menu-item index="/home/position">
+            <i class="iconfont icon-position"></i>
+            <span slot="title">职位管理</span>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="3">
+          <template slot="title">
             <i class="el-icon-user"></i>
             <span slot="title">个人中心</span>
           </template>
-          <el-menu-item index="2-1">修改资料</el-menu-item>
+          <el-menu-item index="/home/updateInfo">
+            <i class="el-icon-edit"></i>
+            <span slot="title">修改资料</span>
+          </el-menu-item>
           <el-menu-item index="/home/updateAvatar">
             <i class="el-icon-picture-outline"></i>
             <span slot="title">设置头像</span>
@@ -41,30 +58,6 @@
             <span slot="title">修改密码</span>
           </el-menu-item>
         </el-submenu>
-        <!-- <el-submenu index="1">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span slot="title">导航一</span>
-          </template>
-          <el-menu-item-group>
-            <span slot="title">分组一</span>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="1-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="1-4">
-            <span slot="title">选项4</span>
-            <el-menu-item index="1-4-1">选项1</el-menu-item>
-          </el-submenu>
-        </el-submenu> -->
-        <!-- <router-link >
-        <el-menu-item index="1">
-          <i class="el-icon-setting"></i>
-          <span slot="title">首页</span>
-        </el-menu-item>
-      </router-link> -->
       </el-menu>
     </div>
   </el-aside>
@@ -77,10 +70,13 @@ export default {
     return {
       asideWidth: 200,
       asideStatus: false,
-      bMenuIndex: "2-1",
+      // bMenuIndex: "2-1",
+      auth: -1,
     };
   },
   mounted() {
+    this.auth = JSON.parse(localStorage.getItem("token")).auth;
+    console.log(this.auth);
     this.asideStatus = localStorage.getItem("asideStatus");
     console.log(this.asideStatus);
     if (this.asideStatus === null) {
@@ -200,5 +196,10 @@ export default {
 
 .el-menu-item.is-active i {
   color: #409eff;
+}
+
+.iconfont {
+  margin: 0 10px 0 5px;
+  font-size: 18px;
 }
 </style>

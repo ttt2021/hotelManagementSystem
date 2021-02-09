@@ -16,6 +16,9 @@ const UserSchema = new Schema({
     username: { // 员工姓名
       type: String
     },
+    avatar: { // 头像
+      type: String
+    },
     job: { // 职务
       type: String
     },

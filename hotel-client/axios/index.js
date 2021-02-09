@@ -4,6 +4,10 @@ import apiLogout from './interface/logout';
 import apiUpdatePassword from './interface/updatePassword';
 import apiUnlock from './interface/unlock';
 import apiUploadAvatar from './interface/uploadAvatar';
+import apiAddPosition from './interface/addPosition';
+import apiShowPositionInfo from './interface/showPositionInfo';
+import apiUpdateStatus from './interface/updateStatus';
+import apiUpdatePositionInfo from './interface/updatePositionInfo';
 
 const install = Vue => {
 	if (install.installed) {
@@ -21,7 +25,11 @@ const install = Vue => {
 					apiLogout,
 					apiUnlock,
 					apiUpdatePassword,
-					apiUploadAvatar
+					apiUploadAvatar,
+					apiAddPosition,
+					apiShowPositionInfo,
+					apiUpdateStatus,
+					apiUpdatePositionInfo
 				)
 			}
 		}

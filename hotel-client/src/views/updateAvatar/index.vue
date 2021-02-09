@@ -57,8 +57,8 @@
         </div>
       </div>
       <div class="file-image" v-if="show">
-          <img :src="fileImg" alt="" />
-        </div>
+        <img :src="fileImg" alt="" />
+      </div>
     </div>
   </div>
 </template>
@@ -97,7 +97,7 @@ export default {
       // 防止重复提交
       loading: false,
       show: false,
-      imgList: []
+      imgList: [],
     };
   },
   methods: {
@@ -124,39 +124,40 @@ export default {
     },
     // 点击裁剪，这一步是可以拿到处理后的地址
     finish() {
-      
-      // this.$refs.cropper.getCropData((data) => {
-      //   console.log(typeof data);
-      //   this.loading = true;
+      this.loading = true;
+      let token = JSON.parse(localStorage.getItem("token"));
+      let userId = token.userId;
+      console.log(this.fileImg);
 
-      //   let userId = JSON.parse(localStorage.getItem('token')).userId
-        
-      //   this.fileImg = data
-      //   // 把图片上传到数据库中
-      //   this.$http.uploadAvatar({
-      //     userId: userId,
-      //     // avatar: JSON.stringify(data)
-      //   }).then(res => {
-      //     console.log(res)
-      //   })
-
-      //   //   setTimeout(() => {
-      //   //     this.loading = false;
-      //   //     this.fileImg = data;
-      //   //   }, 1000);
-      // });
-       this.loading = true;
-
-        let userId = JSON.parse(localStorage.getItem('token')).userId
-        let avatar = this.fileImg
-        
-        // 把图片上传到数据库中
-        this.$http.uploadAvatar({
+      // 把图片base64数据传到服务端
+      this.$http
+        .uploadAvatar({
           userId: userId,
-          avatar: avatar
-        }).then(res => {
-          console.log(res)
+          avatar: this.fileImg,
         })
+        .then((res) => {
+          console.log(res);
+          res = JSON.parse(res);
+          this.show = false;
+          this.loading = false;
+          if (res.code == 0) {
+            this.$message({
+              showClose: true,
+              message: `${res.msg}，请重新设置`,
+              type: "error",
+            });
+            return;
+          } else {
+            // 修改本地存储的信息，并更新本地信息
+            token.avatar = this.fileImg;
+            localStorage.setItem("token", JSON.stringify(token));
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "success",
+            });
+          }
+        });
     },
   },
 };
