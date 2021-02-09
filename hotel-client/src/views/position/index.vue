@@ -96,6 +96,12 @@
               v-else
               ><i class="iconfont icon-start"></i>启用</el-button
             >
+            <el-button
+              size="mini"
+              class="deleteBtn"
+              @click="handleDel(scope.row)"
+              ><i class="iconfont icon-del"></i>删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -118,12 +124,12 @@ export default {
       count: 0,
       title: "新增职位",
       isAdd: true,
-      updatePos: {},
+      updatePos: {}, // 暂存修改的职位信息
     };
   },
   mounted() {
     // 挂载时获取职位列表
-    this.getList()
+    this.getList();
   },
   methods: {
     getList() {
@@ -147,7 +153,44 @@ export default {
         })
         .then((res) => {
           console.log(res);
-          this.getList()
+          this.getList();
+        });
+    },
+    handleDel(info) {
+      this.$confirm("此操作将永久删除该职位，是否继续？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          this.$http
+            .deletePosition({
+              positionId: info.positionId,
+            })
+            .then((res) => {
+              console.log(res);
+              res = JSON.parse(res);
+              if (res.code == 0) {
+                this.$message({
+                  showClose: true,
+                  message: `${res.msg}，请重新操作`,
+                  type: "error",
+                });
+                return
+              } 
+              this.getList()
+              this.$message({
+                  showClose: true,
+                  message: res.msg,
+                  type: "success",
+                });
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
         });
     },
     handleUpdate(info) {
@@ -194,7 +237,7 @@ export default {
             this.newPosition = "";
             this.newPosDesc = "";
             this.newAuth = 0;
-            this.getList()
+            this.getList();
             this.show = false;
           }
         });
@@ -226,7 +269,7 @@ export default {
             this.newAuth = 0;
             this.title = "新增职位";
             this.isAdd = true;
-            this.getList()
+            this.getList();
             this.show = false;
           }
         });
@@ -324,7 +367,8 @@ export default {
   color: rgb(19, 206, 102);
 }
 
-.stopBtn {
+.stopBtn,
+.deleteBtn {
   color: rgb(255, 61, 72);
 }
 </style>

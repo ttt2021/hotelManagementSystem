@@ -8,6 +8,15 @@ const modifyPwd = (data) => {
 	})
 }
 
+const updatePassword = (data) => {
+	return axios({
+		url: '/updatePassword',
+		method: 'post',
+		data
+	})
+}
+
 export default {
-	modifyPwd
+	modifyPwd,
+	updatePassword
 }

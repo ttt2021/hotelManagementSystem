@@ -116,9 +116,32 @@ const updatePositionInfo = async (ctx) => {
   }
 }
 
+const deletePosition = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  const del = await position_col.remove({
+    positionId: req.positionId
+  })
+  console.log(del)
+
+  if (del.deletedCount == 1) {
+    ctx.body = {
+      code: 1,
+      msg: '删除成功'
+    } 
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '删除失败'
+    }
+  }
+}
+
 module.exports = {
   addPosition,
   showPositionInfo,
   updateStatus,
-  updatePositionInfo
+  updatePositionInfo,
+  deletePosition
 }
