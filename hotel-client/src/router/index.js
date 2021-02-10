@@ -32,6 +32,14 @@ const routes = [
       //   redirect: '/home/community'
       // },
       {
+        path: '/home/userInfo',
+        name: 'userInfo',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/userInfo/index.vue')
+      },
+      {
         path: '/home/position',
         name: 'position',
         meta: {

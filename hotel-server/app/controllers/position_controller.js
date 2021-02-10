@@ -8,6 +8,19 @@ const { v1: uuidv1 } = require('uuid')
 const addPosition = async (ctx) => {
   console.log(ctx.request.body)
   let req = ctx.request.body
+  // 判断该职位是否存在
+  const exitPosition = await position_col.findOne({
+    position: req.position
+  })
+  console.log(exitPosition)
+  if (exitPosition) { // 职位存在
+    ctx.body = {
+      code: 0,
+      msg: '该职位已存在，不允许进行添加哟~~~'
+    }
+    return
+  }
+  // 职位不存在
   // 获取当前时间
   let currentTime = formatTime.getTime()
   console.log(currentTime)
@@ -70,6 +83,20 @@ const showPositionInfo = async (ctx) => {
 const updateStatus = async (ctx) => {
   console.log(ctx.request.body)
   let req = ctx.request.body
+  // 查找该职位是否存在员工
+  const hasUser = await user_col.find({
+    position: req.position,
+    auth: req.auth
+  })
+  // 存在员工
+  if (hasUser) {
+    ctx.body = {
+      code: 0,
+      msg: '该职位有员工，不能进行停用！！'
+    }
+  }
+
+  // 不存在员工
   const updated = await position_col.updateOne({ 
     positionId: req.positionId
   }, { 
@@ -119,6 +146,19 @@ const updatePositionInfo = async (ctx) => {
 const deletePosition = async (ctx) => {
   console.log(ctx.request.body)
   let req = ctx.request.body
+
+  // 查询该岗位是否有职员
+  const hasUser = await user_col.find({
+    position: req.position,
+    auth: req.auth
+  })
+
+  if (hasUser) {
+    ctx.body = {
+      code: 0,
+      msg: '无法删除，该岗位还存在员工~~'
+    }
+  }
 
   const del = await position_col.remove({
     positionId: req.positionId

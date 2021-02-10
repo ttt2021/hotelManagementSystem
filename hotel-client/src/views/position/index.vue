@@ -56,13 +56,13 @@
         <el-table-column
           prop="position"
           label="职位"
-          width="80"
+          width="120"
         ></el-table-column>
-        <el-table-column prop="auth" label="权限" width="80"></el-table-column>
+        <el-table-column prop="auth" label="权限" width="50"></el-table-column>
         <el-table-column
           prop="addTime"
           label="添加时间"
-          width="150"
+          width="140"
         ></el-table-column>
         <el-table-column
           prop="addUsername"
@@ -115,8 +115,8 @@ export default {
   data() {
     return {
       show: false,
-      newAuth: 0,
-      columns: [0, 2, 3, 4, 5, 6, 7, 8],
+      newAuth: 2,
+      columns: [2, 3, 4, 5, 6, 7, 8],
       showPicker: false,
       newPosition: "",
       newPosDesc: "",
@@ -143,16 +143,25 @@ export default {
     },
     handleClick(info) {
       console.log(info);
-      let positionId = info.positionId;
       let status = info.status === 1 ? 0 : 1;
-      console.log(positionId, status);
       this.$http
         .updateStatus({
-          positionId: positionId,
+          positionId: info.positionId,
           status: status,
+          position: info.position,
+          auth: info.auth,
         })
         .then((res) => {
           console.log(res);
+          res = JSON.parse(res);
+          if (res.code == 0) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+            return
+          }
           this.getList();
         });
     },
@@ -166,6 +175,8 @@ export default {
           this.$http
             .deletePosition({
               positionId: info.positionId,
+              position: info.position,
+              auth: info.auth,
             })
             .then((res) => {
               console.log(res);
@@ -173,17 +184,17 @@ export default {
               if (res.code == 0) {
                 this.$message({
                   showClose: true,
-                  message: `${res.msg}，请重新操作`,
+                  message: res.msg,
                   type: "error",
                 });
-                return
-              } 
-              this.getList()
+                return;
+              }
+              this.getList();
               this.$message({
-                  showClose: true,
-                  message: res.msg,
-                  type: "success",
-                });
+                showClose: true,
+                message: res.msg,
+                type: "success",
+              });
             });
         })
         .catch(() => {
@@ -226,19 +237,19 @@ export default {
         .then((res) => {
           console.log(res);
           res = JSON.parse(res);
+          this.newPosition = "";
+          this.newPosDesc = "";
+          this.newAuth = 2;
+          this.show = false;
           if (res.code == 0) {
             this.$message({
               showClose: true,
-              message: `${res.msg}，请检查网络`,
+              message: res.msg,
               type: "error",
             });
             return;
           } else {
-            this.newPosition = "";
-            this.newPosDesc = "";
-            this.newAuth = 0;
             this.getList();
-            this.show = false;
           }
         });
     },
@@ -266,11 +277,11 @@ export default {
           } else {
             this.newPosition = "";
             this.newPosDesc = "";
-            this.newAuth = 0;
+            this.newAuth = 2;
+            this.show = false;
             this.title = "新增职位";
             this.isAdd = true;
             this.getList();
-            this.show = false;
           }
         });
     },

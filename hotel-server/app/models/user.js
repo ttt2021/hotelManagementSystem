@@ -54,6 +54,18 @@ const UserSchema = new Schema({
     },
     remarks: { // 备注
       type: String
+    },
+    addTime: { // 添加时间
+      type: String
+    },
+    addUser: { // 添加人
+      type: String
+    },
+    leaveTime: { // 离职办理时间
+      type: String
+    },
+    leaveUser: { // 离职办理人
+      type: String
     }
   }, { collection: 'user', versionKey: false});
   

@@ -31,7 +31,7 @@
             <i class="iconfont icon-peopleInfo"></i>
             <span slot="title">员工信息管理</span>
           </template>
-          <el-menu-item index="/home/updateInfo">
+          <el-menu-item index="/home/userInfo">
             <i class="iconfont icon-user-cog"></i>
             <span slot="title">员工管理</span>
           </el-menu-item>
