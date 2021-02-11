@@ -8,6 +8,41 @@ const addUser = (data) => {
 	})
 }
 
+const getUserList = () => {
+	return axios({
+		url: '/getUserList',
+		method: 'post'
+	})
+}
+
+const getUserInfo = (data) => {
+	return axios({
+		url: '/getUserInfo',
+		method: 'post',
+		data
+	})
+}
+
+const updatedUserinfo = (data) => {
+	return axios({
+		url: '/updatedUserinfo',
+		method: 'post',
+		data
+	})
+}
+
+const searchUser = (data) => {
+	return axios({
+		url: '/searchUser',
+		method: 'post',
+		data
+	})
+}
+
 export default {
-	addUser
+	addUser,
+	getUserList,
+	getUserInfo,
+	updatedUserinfo,
+	searchUser
 }

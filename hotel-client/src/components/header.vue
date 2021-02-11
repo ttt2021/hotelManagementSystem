@@ -15,8 +15,7 @@
         </el-dropdown-menu>
       </el-dropdown>
       <div class="user-avatar">
-        <img :src="userinfo.avatar" alt="" v-if="userinfo.avatar" />
-        <img :src="avatar" v-else />
+        <img :src="avatar" />
       </div>
     </div>
   </el-header>
@@ -29,15 +28,30 @@ export default {
     return {
       avatar: require("../assets/top.jpg"),
       isCollapse: false, // 是否展开，默认展开
+      userinfo: {},
     };
   },
-  props: {
-    userinfo: {
-      type: Object,
-      default: {},
-    },
-  },
   mounted() {
+    let userinfo = JSON.parse(localStorage.getItem("token"));
+    console.log(userinfo);
+    this.userinfo = userinfo;
+    this.$http
+      .getAvatar({
+        userId: userinfo.userId,
+      })
+      .then((res) => {
+        console.log(res);
+        res = JSON.parse(res);
+        if (res.code == 0) {
+          this.$message({
+            showClose: true,
+            message: res.msg,
+            type: "error",
+          });
+          return;
+        }
+        this.avatar = res.data.avatar
+      });
     // 挂载时获取导航栏状态信息
     this.asideStatus = localStorage.getItem("asideStatus");
     if (this.asideStatus === null) {
@@ -71,7 +85,7 @@ export default {
             path: "/lock",
             query: {
               redirect: this.$route.fullPath, // 把要跳转的页面路径作为参数传到锁定页面
-            }
+            },
           });
           break;
         case "logout": //退出系统

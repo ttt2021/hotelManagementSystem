@@ -45,6 +45,23 @@ export default {
     console.log(token);
     if (token !== null) {
       let userinfo = JSON.parse(token);
+      this.$http
+        .getAvatar({
+          userId: userinfo.userId,
+        })
+        .then((res) => {
+          console.log(res);
+          res = JSON.parse(res);
+          if (res.code == 0) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+            return;
+          }
+          this.avatar = res.data.avatar;
+        });
       this.userinfo = userinfo;
     }
   },

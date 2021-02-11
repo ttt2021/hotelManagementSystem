@@ -9,6 +9,11 @@ router.post('/logout', user_controller.logout)
 router.post('/unlock', user_controller.unlock)
 router.post('/updatePassword', user_controller.updatePassword)
 router.post('/uploadAvatar', user_controller.uploadAvatar)
+router.post('/getAvatar', user_controller.getAvatar)
 router.post('/addUser', user_controller.addUser)
+router.post('/getUserList', user_controller.getUserList)
+router.post('/getUserInfo', user_controller.getUserInfo)
+router.post('/updatedUserinfo', user_controller.updatedUserinfo)
+router.post('/searchUser', user_controller.searchUser)
 
 module.exports = router

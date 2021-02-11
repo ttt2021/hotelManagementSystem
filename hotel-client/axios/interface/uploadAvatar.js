@@ -8,6 +8,15 @@ const uploadAvatar = (data) => {
 	})
 }
 
+const getAvatar = (data) => {
+	return axios({
+		url: '/getAvatar',
+		method: 'post',
+		data
+	})
+}
+
 export default {
-	uploadAvatar
+	uploadAvatar,
+	getAvatar
 }

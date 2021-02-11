@@ -16,6 +16,14 @@ const getTime = () => {
   return currentDate
 }
 
+const getDiffYear = (brithYear) => {
+  let date = new Date()
+  let year = date.getFullYear()
+  let diff = year - brithYear + 1
+  return diff
+}
+
 module.exports = {
-  getTime
+  getTime,
+  getDiffYear
 }
