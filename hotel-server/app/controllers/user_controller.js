@@ -3,6 +3,8 @@ const user_col = require('../models/user')
 const password_col = require('../models/password')
 const passport = require('../utils/passport')
 const config = require('../../config')
+const position_col = require('../models/position')
+const formatTime = require('../utils/formatTime')
 
 // 登录
 const login = async (ctx) => {
@@ -210,11 +212,31 @@ const uploadAvatar = async (ctx) => {
   }
 }
 
+const addUser = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  // 获取员工号
+  let getLatestUser = await user_col.find()
+  console.log(getLatestUser)
+
+  let workNum = ''
+  if (getLatestUser === null) {
+    workNum = '100001'
+  }
+  console.log(workNum)
+
+  // 获取权限
+  let getAuth = await position_col.find()
+  console.log(getAuth)
+}
+
 module.exports = {
   login,
   modifyPwd,
   logout,
   unlock,
   updatePassword,
-  uploadAvatar
+  uploadAvatar,
+  addUser
 }

@@ -4,6 +4,7 @@ import apiLogout from './interface/logout';
 import apiUnlock from './interface/unlock';
 import apiUploadAvatar from './interface/uploadAvatar';
 import apiPosition from './interface/position';
+import apiUser from './interface/user';
 
 const install = Vue => {
 	if (install.installed) {
@@ -21,7 +22,8 @@ const install = Vue => {
 					apiLogout,
 					apiUnlock,
 					apiUploadAvatar,
-					apiPosition
+					apiPosition,
+					apiUser
 				)
 			}
 		}

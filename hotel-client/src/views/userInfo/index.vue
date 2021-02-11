@@ -14,7 +14,30 @@
             label="姓名"
             placeholder="请输入姓名"
           />
-          <van-field v-model="newJob" label="职务" placeholder="请输入职务" />
+          <van-field
+            readonly
+            clickable
+            name="picker"
+            :value="newJob"
+            label="职务"
+            placeholder="点击选择职务"
+            @click="showPicker = true"
+          />
+          <van-popup v-model="showPicker" position="bottom">
+            <van-picker
+              show-toolbar
+              :columns="positionList"
+              @confirm="onConfirm"
+              @cancel="showPicker = false"
+            />
+          </van-popup>
+          <van-field name="newAvatar" label="头像">
+            <template #input>
+              <van-uploader :after-read="afterRead"
+                ><img :src="newAvatar" alt="" class="showAvatar"
+              /></van-uploader>
+            </template>
+          </van-field>
           <van-field v-model="newAge" label="年龄" placeholder="请输入年龄" />
           <van-field name="radio" label="性别">
             <template #input>
@@ -34,6 +57,11 @@
             v-model="newAddress"
             label="家庭地址"
             placeholder="请输入家庭住址"
+          />
+          <van-field
+            v-model="newEmail"
+            label="电子邮箱"
+            placeholder="请输入电子邮箱"
           />
           <van-field
             v-model="newIdCard"
@@ -63,33 +91,12 @@
               </el-select>
             </template>
           </van-field>
-          <!-- <van-field
-            v-model="newStatus"
-            label="状态"
-            placeholder="请输入入职日期"
-          /> -->
-          <!-- <van-field
-            readonly
-            clickable
-            name="picker"
-            :value="newAuth"
-            label="权限"
-            placeholder="点击选择权限"
-            @click="showPicker = true"
-          />
-          <van-popup v-model="showPicker" position="bottom">
-            <van-picker
-              show-toolbar
-              :columns="columns"
-              @confirm="onConfirm"
-              @cancel="showPicker = false"
-            />
-          </van-popup>
           <van-field
-            v-model="newPosDesc"
-            label="职位描述"
-            placeholder="请输入描述信息"
-          /> -->
+            v-model="newRemarks"
+            label="备注"
+            placeholder="请输入备注信息"
+          />
+          <van-button round block type="info" @click="add">确定增加</van-button>
           <!-- <van-button round block type="info" @click="add" v-if="isAdd"
             >确定增加</van-button
           >
@@ -208,43 +215,146 @@
 </template>
 
 <script>
+import newAvatar from './avatar'
 export default {
   data() {
     return {
       count: 0,
       userList: [],
       show: false,
+      showPicker: false,
       newUsername: "",
-      newJob: "",
+      newJob: "客房经理",
       newAge: null,
       newSex: "男",
       newTel: "",
       newAddress: "",
       newIdCard: "",
       newBirth: "",
-      newEntryData: '',
+      newEntryData: "",
+      newEmail: "",
+      newRemarks: "",
+      newAvatar: newAvatar,
       options: [
         {
-          value: '选项1',
-          label: '在职'
-        }, 
+          value: "入职",
+          label: "入职",
+        },
         {
-          value: '选项2',
-          label: '离职'
-        }, 
+          value: "在职",
+          label: "在职",
+        },
         {
-          value: '选项3',
-          label: '休假'
-        }],
-        value: ''
+          value: "离职",
+          label: "离职",
+        },
+        {
+          value: "休假",
+          label: "休假",
+        },
+      ],
+      value: "入职",
+      positionList: []
     };
   },
+  mounted() {
+    // 获取职位列表
+    this.$http.showPositionInfo({}).then((res) => {
+      // console.log(res)
+      let positionInfo = JSON.parse(res).data;
+      console.log(positionInfo);
+      let positionList = [];
+      for (let i = 0; i < positionInfo.length; i++) {
+        positionList.push(positionInfo[i].position);
+      }
+      this.positionList = positionList;
+    });
+  },
   methods: {
+    afterRead(file) {
+      // 此时可以自行将文件上传至服务器
+      console.log(file);
+      this.showAvatar = false;
+      this.newAvatar = file.content;
+    },
+    onConfirm(value) {
+      this.newJob = value;
+      this.showPicker = false;
+    },
     indexMethod(index) {
       return index + 1;
     },
     addUser() {
       this.show = true;
+    },
+    add() {
+      if (
+        this.newUsername === "" ||
+        this.newAge === "" ||
+        this.newTel === "" ||
+        this.newAddress === "" ||
+        this.newIdCard === "" ||
+        this.newBirth === "" ||
+        this.newEntryData === "" ||
+        this.newEmail === ""
+      ) {
+        this.$message({
+          showClose: true,
+          message: "内容不能为空",
+          type: "error",
+        });
+        return;
+      }
+      // 验证电子邮箱
+      let emailReg = /^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/;
+      if (!emailReg.test(this.newEmail)) {
+        this.$message({
+          showClose: true,
+          message: "邮箱错误",
+          type: "error",
+        });
+        return;
+      }
+      // 验证手机号
+      if (!/^1[3456789]\d{9}$/.test(this.newTel)) {
+        this.$message({
+          showClose: true,
+          message: "手机号错误",
+          type: "error",
+        });
+        return;
+      }
+      // 验身份证
+      if (!/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(this.newIdCard)) {
+        this.$message({
+          showClose: true,
+          message: "身份证错误",
+          type: "error",
+        });
+        return;
+      }
+
+      let username = (JSON.parse(localStorage.getItem("token"))).username;
+      console.log(username)
+      // 添加职员
+      this.$http.addUser({
+        username: this.newUsername,
+        job: this.newJob,
+        avatar: this.newAvatar,
+        age: this.newAge,
+        sex: this.newSex,
+        tel: this.newTel,
+        address: this.newAddress,
+        email: this.newEmail,
+        idCard: this.newIdCard,
+        brith: this.newBirth,
+        entryData: this.newEntryData,
+        status: this.value,
+        remarks: this.newRemarks,
+        addUser: username
+      }).then(res => {
+        console.log(res)
+      })
     },
   },
 };
@@ -343,4 +453,59 @@ export default {
 .deleteBtn {
   color: rgb(255, 61, 72);
 }
+
+/deep/.el-input__inner {
+  height: 24px;
+  line-height: 24px;
+}
+
+/deep/.el-select .el-input .el-select__caret {
+  margin-top: 8px;
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+  border-color: #409eff;
+}
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+.avatar {
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
+/deep/.van-cell {
+  padding: 5px 16px;
+}
+
+.showAvatar {
+  width: 88px;
+  height: 88px;
+}
+
+// /deep/.van-button {
+//   margin-top: 0;
+// }
+
+// /deep/.van-button--normal {
+//   padding: 0;
+// }
+
+// /deep/.van-button {
+//   height: 88px;
+//   line-height: 88px;
+// }
 </style>

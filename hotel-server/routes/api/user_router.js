@@ -9,5 +9,6 @@ router.post('/logout', user_controller.logout)
 router.post('/unlock', user_controller.unlock)
 router.post('/updatePassword', user_controller.updatePassword)
 router.post('/uploadAvatar', user_controller.uploadAvatar)
+router.post('/addUser', user_controller.addUser)
 
 module.exports = router
