@@ -50,7 +50,7 @@ export default {
           });
           return;
         }
-        this.avatar = res.data.avatar
+        this.avatar = res.data.avatar;
       });
     // 挂载时获取导航栏状态信息
     this.asideStatus = localStorage.getItem("asideStatus");
@@ -59,6 +59,9 @@ export default {
     } else {
       this.asideStatus = this.asideStatus === "false" ? false : true;
     }
+    bus.$on("avatar", (data) => {
+      this.avatar = data;
+    });
   },
   methods: {
     changeAside() {
@@ -91,24 +94,23 @@ export default {
         case "logout": //退出系统
           this.$http.logout({}).then((res) => {
             console.log(res);
+            res = JSON.parse(res);
+            if (res.code == 0) {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "error",
+              });
+            } else {
+              this.$message({
+                showClose: true,
+                message: res.msg,
+                type: "success",
+              });
+              localStorage.removeItem("token");
+              this.$router.push({ path: "/login" });
+            }
           });
-          //     this.$http.post('http://10.21.40.155:3000/logout').then(res=>{
-          //       if(res.data.code===200){
-          //         this.$message({
-          //           showClose:true,
-          //           message:res.data.msg,
-          //           type:'success'
-          //         })
-          //         window.localStorage.removeItem('loginToken');
-          //         this.$router.push({path:'/login'})
-          //       }else{
-          //         this.$message({
-          //           showClose:true,
-          //           message:res.data.msg,
-          //           type:'error'
-          //         })
-          //       }
-          //     })
           break;
       }
     },

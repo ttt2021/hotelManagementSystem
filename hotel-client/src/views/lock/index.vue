@@ -19,7 +19,7 @@
           </div>
           <div class="input-password">
             <i class="el-icon-lock"></i>
-            <el-input v-model="password" placeholder="请输入密码"></el-input>
+            <el-input v-model="password" type="password" placeholder="请输入密码"></el-input>
           </div>
           <el-row>
             <el-button type="primary" @click="unlock">解锁</el-button>

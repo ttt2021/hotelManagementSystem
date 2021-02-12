@@ -44,10 +44,11 @@ export default {
         });
         return
       }
-      let userId = JSON.parse(localStorage.getItem("token")).userId;
+      let userinfo = JSON.parse(localStorage.getItem("token"));
       this.$http
         .updatePassword({
-          userId: userId,
+          userId: userinfo.userId,
+          username: userinfo.username,
           oldPassword: this.oldPwd,
           newPassword: this.newPwd,
         })

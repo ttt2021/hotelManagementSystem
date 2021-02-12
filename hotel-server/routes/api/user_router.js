@@ -15,5 +15,6 @@ router.post('/getUserList', user_controller.getUserList)
 router.post('/getUserInfo', user_controller.getUserInfo)
 router.post('/updatedUserinfo', user_controller.updatedUserinfo)
 router.post('/searchUser', user_controller.searchUser)
+router.post('/userUpdateInfo', user_controller.userUpdateInfo)
 
 module.exports = router

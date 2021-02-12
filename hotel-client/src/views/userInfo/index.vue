@@ -720,14 +720,6 @@ export default {
   width: 90px;
 }
 
-// .count {
-//   font-size: 16px;
-//   font-family: "楷体";
-//   color: #8d8d8d;
-//   text-align: right;
-//   margin-top: 10px;
-// }
-
 .el-table thead {
   font-weight: bold;
 }
@@ -879,17 +871,4 @@ export default {
   word-wrap: break-word;
   white-space: pre-wrap;
 }
-
-// /deep/.van-button {
-//   margin-top: 0;
-// }
-
-// /deep/.van-button--normal {
-//   padding: 0;
-// }
-
-// /deep/.van-button {
-//   height: 88px;
-//   line-height: 88px;
-// }
 </style>

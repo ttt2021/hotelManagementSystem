@@ -65,6 +65,7 @@
 
 <script>
 import { VueCropper } from "vue-cropper";
+import bus from "../../utils/bus.js"; // 总线机制，非父子组件之间通信
 export default {
   components: {
     VueCropper,
@@ -133,6 +134,7 @@ export default {
       this.$http
         .uploadAvatar({
           userId: userId,
+          username: token.username,
           avatar: this.fileImg,
         })
         .then((res) => {
@@ -148,9 +150,7 @@ export default {
             });
             return;
           } else {
-            // 修改本地存储的信息，并更新本地信息
-            token.avatar = this.fileImg;
-            localStorage.setItem("token", JSON.stringify(token));
+            bus.$emit("avatar", this.fileImg);
             this.$message({
               showClose: true,
               message: res.msg,

@@ -5,6 +5,7 @@ const password_col = require('../models/password')
 const passport = require('../utils/passport')
 const config = require('../../config')
 const position_col = require('../models/position')
+const log = require('./log_controller')
 const formatTime = require('../utils/formatTime')
 
 // 登录
@@ -50,12 +51,24 @@ const login = async (ctx) => {
   const match = await passport.validate(req.password, passwd.hash)
   // console.log(match)
   if (match) { // 匹配成功
-    ctx.body = {
-      code: 1,
-      msg: '登录成功',
-      data: user
+    // 添加日志
+    let logs = log.addLog({
+      username: user.username,
+      text: `${user.username}登录了系统`
+    })
+    if (logs) {
+      ctx.body = {
+        code: 1,
+        msg: '登录成功',
+        data: user
+      }
+      return
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '登录失败'
+      }
     }
-    return
   } else { // 匹配失败
     ctx.body = {
       code: 0,
@@ -110,8 +123,18 @@ const modifyPwd = async (ctx) => {
 
 // 退出系统
 const logout = async (ctx) => {
-  // 日志后再做
-  console.log(ctx.request)
+  console.log(ctx.session)
+  if (ctx.session) {
+    ctx.body = {
+      code: 1,
+      msg: '退出成功'
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '退出失败'
+    }
+  }
 }
 
 // 解锁
@@ -168,9 +191,21 @@ const updatePassword = async (ctx) => {
     const result = await password_col.updateOne({ userId }, { hash })
     console.log(result)
     if (result) {
-      ctx.body = {
-        code: 1,
-        msg: '修改成功'
+      let logs = log.addLog({
+        username: req.username,
+        text: `${req.username}修改了密码`
+      })
+      if (logs) {
+        ctx.body = {
+          code: 1,
+          msg: '修改成功'
+        }
+        return
+      } else {
+        ctx.body = {
+          code: 0,
+          msg: '修改失败'
+        }
       }
     } else {
       ctx.body = {
@@ -201,9 +236,21 @@ const uploadAvatar = async (ctx) => {
   const result = await avatar_col.updateOne({ userId: req.userId }, { avatar: req.avatar })
   console.log(result)
   if (result.ok == 1) {
-    ctx.body = {
-      code: 1,
-      msg: '设置成功'
+    let logs = log.addLog({
+      username: req.username,
+      text: `${req.username}修改了头像`
+    })
+    if (logs) {
+      ctx.body = {
+        code: 1,
+        msg: '设置成功'
+      }
+      return
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '设置失败'
+      }
     }
   } else {
     ctx.body = {
@@ -456,15 +503,15 @@ const searchUser = async (ctx) => {
   // 模糊查询
   let searchList = await user_col.find({
     workNum: {
-      $regex: '.*' + req.workNum, 
+      $regex: '.*' + req.workNum,
       $options: 'i'
     },
     username: {
-      $regex: '.*' + req.username, 
+      $regex: '.*' + req.username,
       $options: 'i'
     },
     job: {
-      $regex: '.*' + req.job, 
+      $regex: '.*' + req.job,
       $options: 'i'
     }
   })
@@ -484,6 +531,45 @@ const searchUser = async (ctx) => {
   }
 }
 
+const userUpdateInfo = async (ctx) => {
+  let req = ctx.request.body
+  console.log(ctx.request.body)
+  let updated = await user_col.updateOne({
+    userId: req.userId
+  },
+    {
+      tel: req.tel,
+      email: req.email,
+      address: req.address,
+      status: req.status
+    })
+  console.log(updated)
+
+  if (updated.ok == 1) {
+    let logs = log.addLog({
+      username: req.username,
+      text: `${req.username}修改了个人资料`
+    })
+    if (logs) {
+      ctx.body = {
+        code: 1,
+        msg: '修改成功'
+      }
+      return
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '修改失败'
+      }
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '修改失败'
+    }
+  }
+}
+
 module.exports = {
   login,
   modifyPwd,
@@ -496,5 +582,6 @@ module.exports = {
   getUserInfo,
   updatedUserinfo,
   getAvatar,
-  searchUser
+  searchUser,
+  userUpdateInfo
 }

@@ -39,10 +39,19 @@ const searchUser = (data) => {
 	})
 }
 
+const userUpdateInfo = (data) => {
+	return axios({
+		url: '/userUpdateInfo',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	addUser,
 	getUserList,
 	getUserInfo,
 	updatedUserinfo,
-	searchUser
+	searchUser,
+	userUpdateInfo
 }
