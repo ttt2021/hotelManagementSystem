@@ -31,21 +31,35 @@
             <i class="iconfont icon-peopleInfo"></i>
             <span slot="title">员工信息管理</span>
           </template>
-          <el-menu-item index="/home/userInfo">
+          <el-menu-item index="/home/userInfo" v-if="auth == 3 || auth == 1">
             <i class="iconfont icon-user-cog"></i>
             <span slot="title">员工管理</span>
           </el-menu-item>
-          <el-menu-item index="/home/position">
+          <el-menu-item index="/home/position" v-if="auth == 1">
             <i class="iconfont icon-position"></i>
             <span slot="title">职位管理</span>
           </el-menu-item>
         </el-submenu>
         <el-submenu index="3">
           <template slot="title">
+            <i class="iconfont icon-introduction"></i>
+            <span slot="title">酒店介绍</span>
+          </template>
+          <el-menu-item index="/home/hotelInfo">
+            <i class="iconfont icon-gaikuang"></i>
+            <span slot="title">酒店概况</span>
+          </el-menu-item>
+          <el-menu-item index="/home/updateHotelInfo">
+            <i class="el-icon-edit"></i>
+            <span slot="title">修改酒店信息</span>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="4">
+          <template slot="title">
             <i class="el-icon-user"></i>
             <span slot="title">个人中心</span>
           </template>
-          <el-menu-item index="/home/updateInfo">
+          <el-menu-item index="/home/updateInfo" v-if="auth !== 1">
             <i class="el-icon-edit"></i>
             <span slot="title">修改资料</span>
           </el-menu-item>

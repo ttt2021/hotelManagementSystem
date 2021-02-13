@@ -48,6 +48,22 @@ const routes = [
         component: () => import('@/views/position/index.vue')
       },
       {
+        path: '/home/hotelInfo',
+        name: 'hotelInfo',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/hotelInfo/index.vue')
+      },
+      {
+        path: '/home/updateHotelInfo',
+        name: 'updateHotelInfo',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/updateHotelInfo/index.vue')
+      },
+      {
         path: '/home/updateInfo',
         name: 'updateInfo',
         meta: {

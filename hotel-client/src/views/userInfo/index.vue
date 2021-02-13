@@ -676,11 +676,17 @@ export default {
   display: flex;
   align-items: center;
 }
+
+.userinfo-wrapper {
+  height: 650px;
+}
+
 .title-container {
   margin-bottom: 20px;
   .display();
   justify-content: space-between;
 }
+
 .title-wrapper {
   font-size: 16px;
   font-family: "楷体";
