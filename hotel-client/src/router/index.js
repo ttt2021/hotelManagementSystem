@@ -86,6 +86,14 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views/updatePassword/index.vue')
+      },
+      {
+        path: '/room/styleRoom',
+        name: 'styleRoom',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/styleRoom/index.vue')
       }
     ]
   },

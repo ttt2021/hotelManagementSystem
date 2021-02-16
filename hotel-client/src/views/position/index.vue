@@ -51,28 +51,28 @@
           type="index"
           :index="indexMethod"
           label="序号"
-          width="80"
+          width="100"
         ></el-table-column>
         <el-table-column
           prop="position"
           label="职位"
-          width="120"
+          width="150"
         ></el-table-column>
-        <el-table-column prop="auth" label="权限" width="50"></el-table-column>
+        <el-table-column prop="auth" label="权限" width="60"></el-table-column>
         <el-table-column
           prop="addTime"
           label="添加时间"
-          width="140"
+          width="180"
         ></el-table-column>
         <el-table-column
           prop="addUsername"
           label="添加人"
-          width="80"
+          width="120"
         ></el-table-column>
         <el-table-column
           prop="positionDesc"
           label="职位描述"
-          width="200"
+          width="250"
         ></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">

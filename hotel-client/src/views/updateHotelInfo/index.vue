@@ -116,10 +116,15 @@
         <i class="el-icon-picture-outline"></i>
         <div class="title">酒店图片</div>
       </div>
-      <van-uploader :after-read="afterRead" />
-      <template v-for="(item, imgIndex) in fileList">
-        <img :src="item" alt="" />
+      <van-uploader :after-read="afterRead"/>
+      <div class="show-container">
+        <template v-for="(item, imgIndex) in fileList">
+        <div class="show-img">
+          <i class="el-icon-close" @click="deleteImg(imgIndex)"></i>
+          <img :src="item" alt="" />
+        </div>
       </template>
+      </div>
     </div>
     <div class="baseInfo-wrapper settingInfo">
       <div class="title-wrapper">
@@ -221,13 +226,18 @@ export default {
     this.getInfo();
   },
   methods: {
+    deleteImg(index) {
+      console.log(index)
+      this.fileList.splice(index, 1)
+      console.log(this.fileList)
+    },
     afterRead(file) {
-      console.log(file.content)
+      console.log(file.content);
       if (this.fileList == null) {
-        let imgUrl = [].concat(file.content)
-        this.fileList = imgUrl
+        let imgUrl = [].concat(file.content);
+        this.fileList = imgUrl;
       } else {
-        this.fileList.push(file.content)
+        this.fileList.push(file.content);
       }
     },
     getInfo() {
@@ -287,13 +297,8 @@ export default {
         });
         return;
       }
-      let fileList = [];
-      for (let i = 0; i < this.fileList.length; i++) {
-        fileList[i] = this.fileList[i].content;
-      }
       let username = JSON.parse(localStorage.getItem("token")).username;
       console.log(username);
-      console.log(fileList);
       this.$http
         .updateHotelInfos({
           username: username,
@@ -311,7 +316,7 @@ export default {
           pet: this.pet,
           payment: this.payment,
           receive: this.receive,
-          fileList: fileList,
+          fileList: this.fileList,
           name: this.name,
           address: this.address,
         })
@@ -419,5 +424,41 @@ export default {
 
 /deep/.el-button {
   margin-right: 30px;
+}
+
+.show-container {
+  .display();
+  justify-content: center;
+  word-break:break-all; 
+  word-wrap:break-word;
+}
+
+.show-img {
+  margin-right: 20px;
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+
+.show-img img {
+  width: 100px;
+  height: 100px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+/deep/.el-icon-close {
+  font-size: 14px;
+  color: #99dae5;
+  float: right;
+  text-align: right;
+  z-index: 1;
+  color: #fff;
+  background: rgb(179, 161, 161);
+  border-radius: 0 0 0 10px;
 }
 </style>

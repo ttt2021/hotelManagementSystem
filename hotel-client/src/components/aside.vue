@@ -28,6 +28,20 @@
         </el-menu-item>
         <el-submenu index="2">
           <template slot="title">
+            <i class="iconfont icon-introduction"></i>
+            <span slot="title">酒店介绍</span>
+          </template>
+          <el-menu-item index="/home/hotelInfo">
+            <i class="iconfont icon-gaikuang"></i>
+            <span slot="title">酒店概况</span>
+          </el-menu-item>
+          <el-menu-item index="/home/updateHotelInfo" v-if="auth == 4 || auth == 1">
+            <i class="el-icon-edit"></i>
+            <span slot="title">修改酒店信息</span>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="3" v-if="auth == 3 || auth == 1">
+          <template slot="title">
             <i class="iconfont icon-peopleInfo"></i>
             <span slot="title">员工信息管理</span>
           </template>
@@ -40,21 +54,25 @@
             <span slot="title">职位管理</span>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="3">
+        <el-submenu index="4">
           <template slot="title">
-            <i class="iconfont icon-introduction"></i>
-            <span slot="title">酒店介绍</span>
+            <i class="iconfont icon-room"></i>
+            <span slot="title">客房信息管理</span>
           </template>
-          <el-menu-item index="/home/hotelInfo">
-            <i class="iconfont icon-gaikuang"></i>
-            <span slot="title">酒店概况</span>
+          <el-menu-item index="/room/styleRoom">
+            <i class="iconfont icon-leixing"></i>
+            <span slot="title">客房类型</span>
           </el-menu-item>
           <el-menu-item index="/home/updateHotelInfo">
-            <i class="el-icon-edit"></i>
-            <span slot="title">修改酒店信息</span>
+            <i class="iconfont icon-chaxun"></i>
+            <span slot="title">查询客房</span>
+          </el-menu-item>
+          <el-menu-item index="/home/updateHotelInfo">
+            <i class="iconfont icon-tianjia"></i>
+            <span slot="title">添加客房</span>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="4">
+        <el-submenu index="5">
           <template slot="title">
             <i class="el-icon-user"></i>
             <span slot="title">个人中心</span>
@@ -84,7 +102,6 @@ export default {
     return {
       asideWidth: 200,
       asideStatus: false,
-      // bMenuIndex: "2-1",
       auth: -1,
     };
   },
