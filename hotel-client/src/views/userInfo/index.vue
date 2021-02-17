@@ -806,9 +806,11 @@ export default {
   position: relative;
   overflow: hidden;
 }
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -817,6 +819,7 @@ export default {
   line-height: 178px;
   text-align: center;
 }
+
 .avatar {
   width: 30px;
   height: 30px;

@@ -6,6 +6,7 @@ import apiUploadAvatar from './interface/uploadAvatar';
 import apiPosition from './interface/position';
 import apiUser from './interface/user';
 import apiHotel from './interface/hotel';
+import apiRoom from './interface/room';
 
 const install = Vue => {
 	if (install.installed) {
@@ -25,7 +26,8 @@ const install = Vue => {
 					apiUploadAvatar,
 					apiPosition,
 					apiUser,
-					apiHotel
+					apiHotel,
+					apiRoom
 				)
 			}
 		}
