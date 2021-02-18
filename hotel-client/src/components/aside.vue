@@ -63,13 +63,17 @@
             <i class="iconfont icon-leixing"></i>
             <span slot="title">客房类型</span>
           </el-menu-item>
-          <el-menu-item index="/home/updateHotelInfo">
+          <el-menu-item index="/home/queryRoom">
             <i class="iconfont icon-chaxun"></i>
             <span slot="title">查询客房</span>
           </el-menu-item>
-          <el-menu-item index="/home/updateHotelInfo">
+          <el-menu-item index="/home/addRoom">
             <i class="iconfont icon-tianjia"></i>
             <span slot="title">添加客房</span>
+          </el-menu-item>
+          <el-menu-item index="/home/drink">
+            <i class="iconfont icon-jiushuiyinliao"></i>
+            <span slot="title">客房酒水</span>
           </el-menu-item>
         </el-submenu>
         <el-submenu index="5">

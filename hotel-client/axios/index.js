@@ -7,6 +7,7 @@ import apiPosition from './interface/position';
 import apiUser from './interface/user';
 import apiHotel from './interface/hotel';
 import apiRoom from './interface/room';
+import apiDrink from './interface/drink';
 
 const install = Vue => {
 	if (install.installed) {
@@ -27,7 +28,8 @@ const install = Vue => {
 					apiPosition,
 					apiUser,
 					apiHotel,
-					apiRoom
+					apiRoom,
+					apiDrink
 				)
 			}
 		}

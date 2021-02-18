@@ -184,9 +184,7 @@
       </span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="viewKindRoom">查看</el-button>
-        <el-button type="primary" @click="updateRoomKind"
-          >修改</el-button
-        >
+        <el-button type="primary" @click="updateRoomKind">修改</el-button>
       </span>
     </el-dialog>
     <div class="count">共{{ count }}种房间类型</div>
@@ -244,37 +242,125 @@ export default {
     };
   },
   mounted() {
-    this.$http.getRoomKind({}).then((res) => {
-      console.log(res);
-      res = JSON.parse(res);
-      if (res.code == 0) {
-        this.$message({
-          showClose: true,
-          message: `${res.msg}，请重新刷新`,
-          type: "error",
-        });
-        return;
-      }
-      res.data.pop();
-      let list = [];
-      for (let i = 0; i < res.data.length; i++) {
-        if ((i + 1) % 5 == 0) {
-          this.kindList.push(list);
-          list = [];
-          list.push(res.data[i]);
-          console.log(list);
-        } else {
-          list.push(res.data[i]);
-        }
-      }
-      if (list.length !== 0) {
-        this.kindList.push(list);
-      }
-      console.log(this.kindList);
-      this.count = res.data.length;
-    });
+    this.getList();
   },
   methods: {
+    viewKindRoom() {
+      let roomKindId = this.kindInfo.roomKindId
+      this.$router.push({
+        path: '/home/queryRoom',
+        query: {
+          roomKindId: roomKindId
+        }
+      })
+    },
+    getList() {
+      this.$http.getRoomKind({}).then((res) => {
+        console.log(res);
+        res = JSON.parse(res);
+        if (res.code == 0) {
+          this.$message({
+            showClose: true,
+            message: `${res.msg}，请重新刷新`,
+            type: "error",
+          });
+          return;
+        }
+        res.data.pop();
+        let list = [];
+        for (let i = 0; i < res.data.length; i++) {
+          if ((i + 1) % 5 == 0) {
+            this.kindList.push(list);
+            list = [];
+            list.push(res.data[i]);
+            console.log(list);
+          } else {
+            list.push(res.data[i]);
+          }
+        }
+        if (list.length !== 0) {
+          this.kindList.push(list);
+        }
+        console.log(this.kindList);
+        this.count = res.data.length;
+      });
+    },
+    updateRoomKind() {
+      this.title = "修改房间类型";
+      this.roomKind = this.kindInfo.kind;
+      this.roomRemark = this.kindInfo.remark;
+      this.roomPrice = this.kindInfo.price;
+      this.roomCount = this.kindInfo.count;
+      this.value = this.kindInfo.rank;
+      this.roomImg = this.kindInfo.roomImg;
+      this.roomArea = this.kindInfo.area;
+      this.bedWidth = this.kindInfo.bedWidth;
+      this.bedStyle = this.kindInfo.bedStyle;
+      this.liveCount = this.kindInfo.liveCount;
+      this.window = this.kindInfo.window;
+      this.floor = this.kindInfo.floor;
+      this.smoking = this.kindInfo.smoking;
+      this.isAdd = false;
+      this.centerDialogVisible = false;
+      this.show = true;
+    },
+    update: tool.throttle(async function () {
+      this.$http
+        .updatedRoomKind({
+          roomKindId: this.kindInfo.roomKindId,
+          kind: this.roomKind,
+          remark: this.roomRemark,
+          price: this.roomPrice,
+          count: this.roomCount,
+          rank: this.value,
+          img: this.roomImg,
+          area: this.roomArea,
+          bedWidth: this.bedWidth,
+          bedStyle: this.bedStyle,
+          liveCount: this.liveCount,
+          window: this.window,
+          floor: this.floor,
+          smoking: this.smoking,
+        })
+        .then((res) => {
+          console.log(res);
+          res = JSON.parse(res);
+          if (res.code == 0) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+            return;
+          }
+          this.show = false;
+          this.kindInfo = res.data;
+          console.log(this.kindInfo);
+          this.kindList = [];
+          this.getList();
+          this.getImg();
+          setTimeout(() => {
+            this.newInfo()
+          }, 3000)
+        });
+    }),
+    newInfo() {
+      this.title = "添加房间类型";
+      this.roomKind = "";
+      this.roomRemark = "";
+      this.roomPrice = "";
+      this.roomCount = null;
+      this.value = "5星级";
+      this.roomImg = roomImg;
+      this.roomArea = "";
+      this.bedWidth = "";
+      this.bedStyle = "";
+      this.liveCount = "2(不可加床)";
+      this.window = "有";
+      this.floor = 6;
+      this.smoking = "否";
+      this.isAdd = true;
+    },
     addPosition() {
       this.show = true;
     },
@@ -282,6 +368,11 @@ export default {
       console.log(row, col);
       console.log(this.kindList[row][col]);
       let kindInfo = this.kindList[row][col];
+      this.kindInfo = kindInfo;
+      this.getImg();
+    },
+    getImg() {
+      let kindInfo = this.kindInfo;
       this.$http
         .getKindImg({
           roomImgId: kindInfo.roomKindId,
@@ -298,7 +389,7 @@ export default {
             return;
           }
           kindInfo.roomImg = res.data.img;
-          kindInfo.remark = kindInfo.remark === '' ? '无' : kindInfo.remark
+          kindInfo.remark = kindInfo.remark === "" ? "无" : kindInfo.remark;
           console.log(kindInfo);
           this.kindInfo = kindInfo;
           this.centerDialogVisible = true;
@@ -515,16 +606,16 @@ export default {
 
 .infos-wrapper {
   display: flex;
-  word-break: break-all;       
-  word-wrap: break-word;   
-  white-space: pre-wrap; 
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 /deep/.el-dialog--center .el-dialog__body {
   padding: 25px 25px 15px;
 }
 
-/deep/.el-button+.el-button {
+/deep/.el-button + .el-button {
   margin-left: 50px;
 }
 </style>

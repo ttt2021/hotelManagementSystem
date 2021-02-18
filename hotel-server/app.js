@@ -39,9 +39,11 @@ const user_router = require('./routes/api/user_router')
 const position_router = require('./routes/api/position_router')
 const hotel_router = require('./routes/api/hotel_router')
 const room_router = require('./routes/api/room_router')
+const drink_router = require('./routes/api/drink_router')
 app.use(user_router.routes())
 app.use(position_router.routes())
 app.use(hotel_router.routes())
 app.use(room_router.routes())
+app.use(drink_router.routes())
 
 app.listen(config.port)  // 监听端口

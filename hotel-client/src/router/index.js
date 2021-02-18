@@ -94,6 +94,30 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views/styleRoom/index.vue')
+      },
+      {
+        path: '/home/queryRoom',
+        name: 'queryRoom',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/queryRoom/index.vue')
+      },
+      {
+        path: '/home/addRoom',
+        name: 'addRoom',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/addRoom/index.vue')
+      },
+      {
+        path: '/home/drink',
+        name: 'drink',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/drink/index.vue')
       }
     ]
   },

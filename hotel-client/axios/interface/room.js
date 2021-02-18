@@ -23,8 +23,52 @@ const getKindImg = (data) => {
 	})
 }
 
+const updatedRoomKind = (data) => {
+	return axios({
+		url: '/updatedRoomKind',
+		method: 'post',
+		data
+	})
+}
+
+const addRoom = (data) => {
+	return axios({
+		url: '/addRoom',
+		method: 'post',
+		data
+	})
+}
+
+const getRoomList = (data) => {
+	return axios({
+		url: '/getRoomList',
+		method: 'post'
+	})
+}
+
+const delRoom = (data) => {
+	return axios({
+		url: '/delRoom',
+		method: 'post',
+		data
+	})
+}
+
+const updatedRoom = (data) => {
+	return axios({
+		url: '/updatedRoom',
+		method: 'post',
+		data
+	})
+}
+
 export default {
   addRoomKind,
 	getRoomKind,
-	getKindImg
+	getKindImg,
+	updatedRoomKind,
+	addRoom,
+	getRoomList,
+	delRoom,
+	updatedRoom
 }
