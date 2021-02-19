@@ -5,6 +5,10 @@
         <i class="el-icon-edit-outline"></i>
         <div class="title">未开客房信息列表</div>
       </div>
+      <div class="add-btn">
+        <el-button @click="toggleSelection">取消</el-button>
+        <el-button type="primary" @click="order">开房</el-button>
+      </div>
     </div>
     <div class="search-wrapper">
       <div class="search-title">
@@ -28,6 +32,7 @@
     </div>
     <div class="drink-list">
       <el-table
+        ref="multipleTable"
         style="width: 100%"
         :data="
           roomList.slice((currentPage - 1) * pagesize, currentPage * pagesize)
@@ -107,6 +112,21 @@ export default {
     this.getList();
   },
   methods: {
+    order() { // 多行数据路由跳转
+      console.log(this.multipleSelection)
+      let num = {}
+      for (let i = 0; i < this.multipleSelection.length; i++) {
+        num[`roomId${i}`] = this.multipleSelection[i].roomId
+      }
+      console.log(num)
+      this.$router.push({
+        path: '/checkOut',
+        query: num
+      })
+    },
+    toggleSelection() {
+      this.$refs.multipleTable.clearSelection();
+    },
     handleSelectionChange(val) {
       console.log(val);
       this.multipleSelection = val;
