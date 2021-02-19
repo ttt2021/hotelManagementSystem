@@ -118,6 +118,46 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views/drink/index.vue')
+      },
+      {
+        path: '/staff',
+        name: 'staff',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/staff/index.vue')
+      },
+      {
+        path: '/roomKind',
+        name: 'roomKind',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/roomKind/index.vue')
+      },
+      {
+        path: '/viewRoom',
+        name: 'viewRoom',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/viewRoom/index.vue')
+      },
+      {
+        path: '/orderRoom',
+        name: 'orderRoom',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/orderRoom/index.vue')
+      },
+      {
+        path: '/checkOut',
+        name: 'checkOut',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/checkOut/index.vue')
       }
     ]
   },
@@ -129,11 +169,6 @@ const routes = [
     },
     component: () => import('@/views/lock/index.vue')
   },
-  // {
-  //   path: '/catering',
-  //   name: 'catering',
-  //   component: () => import('@/views/catering/index.vue')
-  // }
   {
     path: '*',
     redirect: '/404'

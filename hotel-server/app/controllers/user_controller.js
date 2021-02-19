@@ -437,6 +437,15 @@ const getUserInfo = async (ctx) => {
 const updatedUserinfo = async (ctx) => {
   console.log(ctx.request.body)
   let req = ctx.request.body
+  if (req.status == '离职') {
+    req.auth = 0
+  } else {
+    let positionInfo = await position_col.findOne({
+      position: req.job
+    })
+    console.log(positionInfo)
+    req.auth = positionInfo.auth
+  }
   let result = await user_col.updateOne({
     userId: req.userId
   },
@@ -446,7 +455,8 @@ const updatedUserinfo = async (ctx) => {
       address: req.address,
       email: req.email,
       status: req.status,
-      remarks: req.remarks
+      remarks: req.remarks,
+      auth: req.auth
     })
   console.log(result)
   if (result.ok == 1) {
@@ -570,6 +580,61 @@ const userUpdateInfo = async (ctx) => {
   }
 }
 
+const getStaffList = async (ctx) => {
+  const userinfo = await user_col.find({
+    auth: { $gt: 1 }
+  })
+  console.log("userinfo:", userinfo)
+  if (userinfo) {
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: userinfo
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '获取失败'
+    }
+  }
+}
+
+const searchStaff = async (ctx) => {
+  let req = ctx.request.body
+  console.log(req)
+
+  // 模糊查询
+  let searchList = await user_col.find({
+    workNum: {
+      $regex: '.*' + req.workNum,
+      $options: 'i'
+    },
+    username: {
+      $regex: '.*' + req.username,
+      $options: 'i'
+    },
+    job: {
+      $regex: '.*' + req.job,
+      $options: 'i'
+    },
+    auth: { $gt: 1 }
+  })
+  console.log(searchList)
+  if (searchList.length !== 0) {
+    ctx.body = {
+      code: 1,
+      msg: '查询成功',
+      data: searchList
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '查无此人',
+      data: searchList
+    }
+  }
+}
+
 module.exports = {
   login,
   modifyPwd,
@@ -583,5 +648,7 @@ module.exports = {
   updatedUserinfo,
   getAvatar,
   searchUser,
-  userUpdateInfo
+  userUpdateInfo,
+  getStaffList,
+  searchStaff
 }

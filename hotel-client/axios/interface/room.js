@@ -62,6 +62,45 @@ const updatedRoom = (data) => {
 	})
 }
 
+const searchRoom = (data) => {
+	return axios({
+		url: '/searchRoom',
+		method: 'post',
+		data
+	})
+}
+
+const getKindRoom = (data) => {
+	return axios({
+		url: '/getKindRoom',
+		method: 'post',
+		data
+	})
+}
+
+const getOrderRoom = (data) => {
+	return axios({
+		url: '/getOrderRoom',
+		method: 'post'
+	})
+}
+
+const searchOrderRoom = (data) => {
+	return axios({
+		url: '/searchOrderRoom',
+		method: 'post',
+		data
+	})
+}
+
+const orderRoom = (data) => {
+	return axios({
+		url: '/orderRoom',
+		method: 'post',
+		data
+	})
+}
+
 export default {
   addRoomKind,
 	getRoomKind,
@@ -70,5 +109,10 @@ export default {
 	addRoom,
 	getRoomList,
 	delRoom,
-	updatedRoom
+	updatedRoom,
+	searchRoom,
+	getKindRoom,
+	getOrderRoom,
+	searchOrderRoom,
+	orderRoom
 }

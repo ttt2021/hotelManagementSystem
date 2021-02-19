@@ -65,34 +65,12 @@
           </template>
         </el-table-column>
         <el-table-column prop="price" label="单价"></el-table-column>
-        <el-table-column prop="addUser" label="添加人"></el-table-column>
-        <el-table-column
-          prop="addTime"
-          label="添加时间"
-          width="100px"
-        ></el-table-column>
         <el-table-column
           prop="drinkings"
           label="酒水配置"
           width="350px"
         ></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column label="操作" width="200px">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              class="updateBtn"
-              @click="handleUpdate(scope.row)"
-              ><i class="iconfont icon-update"></i>修改</el-button
-            >
-            <el-button
-              size="mini"
-              class="deleteBtn"
-              @click="handleDel(scope.row)"
-              ><i class="iconfont icon-del"></i>删除</el-button
-            >
-          </template>
-        </el-table-column>
       </el-table>
       <el-pagination
         @size-change="handleSizeChange"
@@ -105,49 +83,6 @@
         class="pageCount"
       >
       </el-pagination>
-      <van-popup v-model="show">
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="客房号">
-            <el-input v-model="form.num" readonly></el-input>
-          </el-form-item>
-          <el-form-item label="客房名称">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>
-          <el-form-item label="房间类型">
-            <el-select v-model="form.kind">
-              <template v-for="(item, kindIndex) in form.kindList">
-                <el-option :label="item" :value="item"></el-option>
-              </template>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="价格">
-            <el-input v-model="form.price"></el-input>
-          </el-form-item>
-          <el-form-item label="房态">
-            <el-select v-model="form.region">
-              <el-option label="清洁" value="清洁"></el-option>
-              <el-option label="有客" value="有客"></el-option>
-              <el-option label="清理中" value="清理中"></el-option>
-              <el-option label="待修理" value="待修理"></el-option>
-              <el-option label="有预约" value="有预约"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="酒水服务">
-            <el-checkbox-group v-model="form.type">
-              <template v-for="(item, kindIndex) in form.drinkList">
-                <el-checkbox :label="item" name="type"></el-checkbox>
-              </template>
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item label="备注">
-            <el-input type="textarea" v-model="form.remark"></el-input>
-          </el-form-item>
-          <el-form-item class="btn-wrapper">
-            <el-button @click="handleCancel">取消</el-button>
-            <el-button type="primary" @click="onSubmit">立即修改</el-button>
-          </el-form-item>
-        </el-form>
-      </van-popup>
     </div>
   </div>
 </template>
@@ -160,7 +95,6 @@ export default {
       roomList: [],
       currentPage: 1, //初始页
       pagesize: 5, // 每页数据
-      show: false,
       inputNum: "",
       inputName: "",
       inputKind: "",
@@ -180,7 +114,6 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.$route.query.roomKindId)
     let roomKindId = this.$route.query.roomKindId || "";
     console.log(roomKindId);
     this.roomKindId = roomKindId;
@@ -245,140 +178,6 @@ export default {
     handleCurrentChange: function (currentPage) {
       this.currentPage = currentPage;
       console.log(this.currentPage); //点击第几页
-    },
-    handleDel(info) {
-      console.log(info);
-      this.$http
-        .delRoom({
-          roomId: info.roomId,
-        })
-        .then((res) => {
-          console.log(res);
-          res = JSON.parse(res);
-          if (res.code == 0) {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "error",
-            });
-            return;
-          }
-          if (this.roomKindId === "") {
-            this.getList();
-          } else {
-            this.getGoalList();
-          }
-          this.$message({
-            showClose: true,
-            message: res.msg,
-            type: "success",
-          });
-        });
-    },
-    handleUpdate(info) {
-      console.log(info);
-      if (info.num.length > 5) {
-        info.num = info.num.replace(/<[^>]+>/g, "");
-      }
-      if (info.name.length > 5) {
-        info.name = info.name.replace(/<[^>]+>/g, "");
-      }
-      if (info.kind.length > 5) {
-        info.kind = info.kind.replace(/<[^>]+>/g, "");
-      }
-      if (info.region.length > 5) {
-        info.region = info.region.replace(/<[^>]+>/g, "");
-      }
-      this.form.num = info.num;
-      this.form.name = info.name;
-      this.form.price = info.price;
-      this.form.remark = info.remark;
-      this.form.region = info.region;
-      this.form.kind = info.kind;
-      this.form.type = info.drinkings.split(" 、");
-      console.log(this.form);
-      this.$http.getDrinkList({}).then((res) => {
-        console.log(res);
-        res = JSON.parse(res);
-        if (res.code == 0) {
-          this.$message({
-            showClose: true,
-            message: res.msg,
-            type: "error",
-          });
-          return;
-        }
-        let list = [];
-        for (let i = 0; i < res.data.length; i++) {
-          list.push(res.data[i].name);
-        }
-        this.form.drinkList = list;
-        console.log(this.form.drinkList);
-      });
-      this.$http.getRoomKind({}).then((res) => {
-        console.log(res);
-        res = JSON.parse(res);
-        if (res.code == 0) {
-          this.$message({
-            showClose: true,
-            message: "请重新刷新网络",
-            type: "error",
-          });
-          return;
-        }
-        let list = res.data;
-        let dataList = [];
-        for (let i = 0; i < list.length; i++) {
-          dataList.push(list[i].kind);
-        }
-        this.form.kindList = dataList;
-        console.log(this.form.kindList);
-      });
-      this.show = true;
-    },
-    handleCancel() {
-      if (this.roomKindId === "") {
-        this.getList();
-      } else {
-        this.getGoalList();
-      }
-      this.show = false;
-    },
-    onSubmit() {
-      console.log(this.form.price);
-      this.$http
-        .updatedRoom({
-          num: this.form.num,
-          name: this.form.name,
-          kind: this.form.kind,
-          price: this.form.price,
-          region: this.form.region,
-          drinkings: this.form.type,
-          remark: this.form.remark,
-        })
-        .then((res) => {
-          console.log(res);
-          res = JSON.parse(res);
-          if (res.code == 0) {
-            this.$message({
-              showClose: true,
-              message: res.msg,
-              type: "error",
-            });
-            return;
-          }
-          if (this.roomKindId === "") {
-            this.getList();
-          } else {
-            this.getGoalList();
-          }
-          this.$message({
-            showClose: true,
-            message: res.msg,
-            type: "success",
-          });
-          this.show = false;
-        });
     },
     searchRoom: tool.throttle(function () {
       this.$http

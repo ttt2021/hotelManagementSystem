@@ -28,6 +28,46 @@
         </el-menu-item>
         <el-submenu index="2">
           <template slot="title">
+            <i class="iconfont icon-guanli"></i>
+            <span slot="title">开退房管理</span>
+          </template>
+          <el-menu-item index="/orderRoom">
+            <i class="iconfont icon-dingfang"></i>
+            <span slot="title">开房功能</span>
+          </el-menu-item>
+          <el-menu-item index="/viewRoom">
+            <i class="iconfont icon-tiaofang-"></i>
+            <span slot="title">调房功能</span>
+          </el-menu-item>
+          <el-menu-item index="/checkOut">
+            <i class="iconfont icon-jiezhang"></i>
+            <span slot="title">结算功能</span>
+          </el-menu-item>
+          <el-menu-item index="/viewRoom">
+            <i class="iconfont icon-tiaofang-"></i>
+            <span slot="title">退房功能</span>
+          </el-menu-item>
+        </el-submenu>
+        <el-submenu index="3" v-if="auth == 5">
+          <template slot="title">
+            <i class="iconfont icon-room"></i>
+            <span slot="title">客房信息查询</span>
+          </template>
+          <el-menu-item index="/roomKind">
+            <i class="iconfont icon-leixing"></i>
+            <span slot="title">客房类型</span>
+          </el-menu-item>
+          <el-menu-item index="/viewRoom">
+            <i class="iconfont icon-chaxun"></i>
+            <span slot="title">查询客房</span>
+          </el-menu-item>
+        </el-submenu>
+        <el-menu-item index="/staff" class="firstMenu" v-if="auth == 5">
+          <i class="iconfont icon-user-cog"></i>
+          <span slot="title">职员信息查询</span>
+        </el-menu-item>
+        <el-submenu index="4">
+          <template slot="title">
             <i class="iconfont icon-introduction"></i>
             <span slot="title">酒店介绍</span>
           </template>
@@ -40,7 +80,7 @@
             <span slot="title">修改酒店信息</span>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="3" v-if="auth == 3 || auth == 1">
+        <el-submenu index="5" v-if="auth == 3 || auth == 1">
           <template slot="title">
             <i class="iconfont icon-peopleInfo"></i>
             <span slot="title">员工信息管理</span>
@@ -54,7 +94,7 @@
             <span slot="title">职位管理</span>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="4">
+        <el-submenu index="6" v-if="auth == 2 || auth == 1">
           <template slot="title">
             <i class="iconfont icon-room"></i>
             <span slot="title">客房信息管理</span>
@@ -76,7 +116,7 @@
             <span slot="title">客房酒水</span>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="5">
+        <el-submenu index="7">
           <template slot="title">
             <i class="el-icon-user"></i>
             <span slot="title">个人中心</span>

@@ -266,7 +266,6 @@ export default {
           });
           return;
         }
-        res.data.pop();
         let list = [];
         for (let i = 0; i < res.data.length; i++) {
           if ((i + 1) % 5 == 0) {

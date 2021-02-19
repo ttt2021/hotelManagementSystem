@@ -393,6 +393,9 @@ export default {
               );
             }
           }
+          this.inputWorkNum = ''
+          this.inputUsername = ''
+          this.inputJob = ''
         });
     }),
     // 初始页currentPage、初始每页数据数pagesize和数据data
@@ -634,6 +637,7 @@ export default {
           email: this.newEmail,
           status: this.value,
           remarks: this.remarks,
+          auth: this.userinfo.auth
         })
         .then((res) => {
           console.log(res);

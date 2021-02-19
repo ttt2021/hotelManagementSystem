@@ -47,11 +47,29 @@ const userUpdateInfo = (data) => {
 	})
 }
 
+const getStaffList = (data) => {
+	return axios({
+		url: '/getStaffList',
+		method: 'post',
+		data
+	})
+}
+
+const searchStaff = (data) => {
+	return axios({
+		url: '/searchStaff',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	addUser,
 	getUserList,
 	getUserInfo,
 	updatedUserinfo,
 	searchUser,
-	userUpdateInfo
+	userUpdateInfo,
+	getStaffList,
+	searchStaff
 }

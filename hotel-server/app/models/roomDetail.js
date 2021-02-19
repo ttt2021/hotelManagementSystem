@@ -8,7 +8,7 @@ const roomDetailSchema = new Schema({
     require: true
   },
   num: { // 房间号
-    type: Number,
+    type: String,
   },
   name: { // 房间名称
     type: String,

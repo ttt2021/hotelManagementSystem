@@ -1,6 +1,7 @@
 const room_col = require('../models/room')
 const roomDetail_col = require('../models/roomDetail')
 const roomImg_col = require('../models/roomImg')
+const order_col = require('../models/order')
 const formatTime = require('../utils/formatTime')
 const { v1: uuidv1 } = require('uuid');
 
@@ -276,7 +277,7 @@ const delRoom = async (ctx) => {
 const updatedRoom = async (ctx) => {
   console.log("body:", ctx.request.body)
   let req = ctx.request.body
-  let num = Number(req.num)
+  let num = req.num
   let price = Number(req.price)
   let result = await roomDetail_col.updateOne({
     num: num
@@ -303,6 +304,169 @@ const updatedRoom = async (ctx) => {
   }
 }
 
+const searchRoom = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  if (req.roomKindId !== '') {
+    let kindInfo = await room_col.findOne({
+      roomKindId: req.roomKindId
+    })
+    console.log(kindInfo.kind)
+    req.kind = kindInfo.kind
+    console.log(req.kind)
+  }
+
+  // 模糊查询
+  let searchList = await roomDetail_col.find({
+    num: {
+      $regex: '.*' + req.num,
+      $options: 'i'
+    },
+    name: {
+      $regex: '.*' + req.name,
+      $options: 'i'
+    },
+    kind: {
+      $regex: '.*' + req.kind,
+      $options: 'i'
+    },
+    region: {
+      $regex: '.*' + req.region,
+      $options: 'i'
+    }
+  })
+  console.log(searchList)
+  if (searchList.length !== 0) {
+    ctx.body = {
+      code: 1,
+      msg: '查询成功',
+      data: searchList
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '查无此房间',
+      data: searchList
+    }
+  }
+}
+
+const getKindRoom = async (ctx) => {
+  let req = ctx.request.body
+  console.log(ctx.request.body)
+  let kindInfo = await room_col.findOne({
+    roomKindId: req.roomKindId
+  })
+  console.log(kindInfo.kind)
+  let result = await roomDetail_col.find({
+    kind: kindInfo.kind
+  }).sort({ 'addTime': -1, 'num': -1 })
+  console.log(result)
+
+  if (result.length == 0) {
+    ctx.body = {
+      code: 0,
+      msg: '暂无数据，请添加'
+    }
+  } else {
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: result
+    }
+  }
+}
+
+const getOrderRoom = async (ctx) => {
+  let result = await roomDetail_col.find({
+    region: '清洁'
+  }).sort({ 'addTime': -1, 'num': -1 })
+  console.log(result)
+
+  if (result.length == 0) {
+    ctx.body = {
+      code: 0,
+      msg: '客房已满'
+    }
+  } else {
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: result
+    }
+  }
+}
+
+const searchOrderRoom = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  // 模糊查询
+  let searchList = await roomDetail_col.find({
+    num: {
+      $regex: '.*' + req.num,
+      $options: 'i'
+    },
+    name: {
+      $regex: '.*' + req.name,
+      $options: 'i'
+    },
+    kind: {
+      $regex: '.*' + req.kind,
+      $options: 'i'
+    },
+    region: '清洁'
+  })
+  console.log(searchList)
+  if (searchList.length !== 0) {
+    ctx.body = {
+      code: 1,
+      msg: '查询成功',
+      data: searchList
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '此类房间已满',
+      data: searchList
+    }
+  }
+}
+
+const orderRoom = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  // let orderId = uuidv1()
+  // console.log(orderId)
+  // let time = formatTime.getNowTime()
+  // console.log(time)
+
+  // let result = await order_col.create({
+  //   orderId: orderId,
+  //   roomId: req.num,
+  //   orderName: req.orderName,
+  //   orderSex: req.orderSex,
+  //   orderIdCard: req.orderIdCard,
+  //   orderTime: time,
+  //   addUser: req.addUser,
+  //   remark: req.remark
+  // })
+
+  // if (result) {
+  //   ctx.body = {
+  //     code: 1,
+  //     msg: '开房成功'
+  //   }
+  // } else {
+  //   ctx.body = {
+  //     code: 0,
+  //     msg: '开房失败'
+  //   }
+  // }
+}
+
 module.exports = {
   addRoomKind,
   getRoomKind,
@@ -311,5 +475,10 @@ module.exports = {
   addRoom,
   getRoomList,
   delRoom,
-  updatedRoom
+  updatedRoom,
+  searchRoom,
+  getKindRoom,
+  getOrderRoom,
+  searchOrderRoom,
+  orderRoom
 }

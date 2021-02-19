@@ -1,12 +1,12 @@
 <template>
   <div class="addRoom-wrapper">
-    <div class="title">新增客房</div>
+    <div class="title">订单信息</div>
     <div class="content-wrapper">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="客房号">
           <el-input v-model="form.num"></el-input>
         </el-form-item>
-        <el-form-item label="客房名称">
+        <!-- <el-form-item label="客房名称">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="房间类型">
@@ -37,7 +37,7 @@
         </el-form-item>
         <el-form-item label="备注">
           <el-input type="textarea" v-model="form.remark"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item class="btn-wrapper">
           <el-button @click="handleCancel">取消</el-button>
           <el-button type="primary" @click="onSubmit">立即添加</el-button>
@@ -65,40 +65,8 @@ export default {
     };
   },
   mounted() {
-    this.$http.getDrinkList({}).then((res) => {
-      console.log(res);
-      res = JSON.parse(res);
-      if (res.code == 0) {
-        this.$message({
-          showClose: true,
-          message: res.msg,
-          type: "error",
-        });
-        return;
-      }
-      for (let i = 0; i < res.data.length; i++) {
-        this.form.drinkList.push(res.data[i].name);
-      }
-      console.log(this.form.drinkList);
-    });
-    this.$http.getRoomKind({}).then((res) => {
-      console.log(res);
-      res = JSON.parse(res);
-      if (res.code == 0) {
-        this.$message({
-          showClose: true,
-          message: "请重新刷新网络",
-          type: "error",
-        });
-        return;
-      }
-      let list = res.data;
-      this.form.kind = list[0].kind;
-      for (let i = 0; i < list.length; i++) {
-        this.form.kindList.push(list[i].kind);
-      }
-      console.log(this.form.kindList);
-    });
+    let roomId= this.$route.query.roomId
+    console.log(roomId)
   },
   methods: {
     onSubmit() {
