@@ -15,5 +15,11 @@ router.post('/getKindRoom', room_controller.getKindRoom)
 router.post('/getOrderRoom', room_controller.getOrderRoom)
 router.post('/searchOrderRoom', room_controller.searchOrderRoom)
 router.post('/orderRoom', room_controller.orderRoom)
+router.post('/getRoomInfo', room_controller.getRoomInfo)
+router.post('/bookRoomInfo', room_controller.bookRoomInfo)
+router.post('/getBookList', room_controller.getBookList)
+router.post('/cancelBook', room_controller.cancelBook)
+router.post('/getBookInfo', room_controller.getBookInfo)
+router.post('/updatedBookInfo', room_controller.updatedBookInfo)
 
 module.exports = router

@@ -4,7 +4,7 @@
       <div class="title-container">
         <div class="title-wrapper">
           <i class="el-icon-edit-outline"></i>
-          <div class="title">退房信息列表</div>
+          <div class="title">订房信息列表</div>
         </div>
         <!-- <div class="add-btn">
         <el-button @click="toggleSelection">取消</el-button>
@@ -329,6 +329,7 @@ export default {
             message: res.msg,
             type: "success",
           });
+          this.$router.push('/checkOut')
         });
     }),
   },

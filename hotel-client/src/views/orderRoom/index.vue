@@ -5,10 +5,10 @@
         <i class="el-icon-edit-outline"></i>
         <div class="title">未开客房信息列表</div>
       </div>
-      <div class="add-btn">
+      <!-- <div class="add-btn">
         <el-button @click="toggleSelection">取消</el-button>
         <el-button type="primary" @click="order">开房</el-button>
-      </div>
+      </div> -->
     </div>
     <div class="search-wrapper">
       <div class="search-title">
@@ -31,15 +31,21 @@
       ></el-button>
     </div>
     <div class="drink-list">
-      <el-table
+      <!-- <el-table
         ref="multipleTable"
         style="width: 100%"
         :data="
           roomList.slice((currentPage - 1) * pagesize, currentPage * pagesize)
         "
         @selection-change="handleSelectionChange"
+      > -->
+      <el-table
+        style="width: 100%"
+        :data="
+          roomList.slice((currentPage - 1) * pagesize, currentPage * pagesize)
+        "
       >
-        <el-table-column type="selection"> </el-table-column>
+        <!-- <el-table-column type="selection"> </el-table-column> -->
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column label="房间号">
           <template slot-scope="scope">
@@ -105,32 +111,35 @@ export default {
       inputNum: "",
       inputName: "",
       inputKind: "",
-      multipleSelection: [],
+      // multipleSelection: [],
     };
   },
   mounted() {
     this.getList();
   },
   methods: {
-    order() { // 多行数据路由跳转
-      console.log(this.multipleSelection)
-      let num = {}
-      for (let i = 0; i < this.multipleSelection.length; i++) {
-        num[`roomId${i}`] = this.multipleSelection[i].roomId
-      }
-      console.log(num)
-      this.$router.push({
-        path: '/checkOut',
-        query: num
-      })
-    },
-    toggleSelection() {
-      this.$refs.multipleTable.clearSelection();
-    },
-    handleSelectionChange(val) {
-      console.log(val);
-      this.multipleSelection = val;
-    },
+    // order() {
+      // // 多行数据路由跳转
+      // console.log(this.multipleSelection);
+      // let num = {};
+      // for (let i = 0; i < this.multipleSelection.length; i++) {
+      //   num[`roomId${i}`] = this.multipleSelection[i].roomId;
+      // }
+      // console.log(num);
+      // this.$router.push({
+      //   path: "/settlement",
+      //   query: {
+      //     rooms: num
+      //   }
+      // });
+    // },
+    // toggleSelection() {
+    //   this.$refs.multipleTable.clearSelection();
+    // },
+    // handleSelectionChange(val) {
+    //   console.log(val);
+    //   this.multipleSelection = val;
+    // },
     getList() {
       this.$http.getOrderRoom({}).then((res) => {
         console.log(res);
@@ -164,11 +173,17 @@ export default {
     handleOpen(info) {
       console.log(info);
       this.$router.push({
-        path: "/checkOut",
+        path: "/bookRoom",
         query: {
           roomId: info.roomId,
         },
       });
+      // this.$router.push({
+      //   path: "/settlement",
+      //   query: {
+      //     rooms: info.roomId,
+      //   },
+      // });
     },
     searchRoom: tool.throttle(function () {
       console.log(this.inputNum, this.inputName, this.inputKind);

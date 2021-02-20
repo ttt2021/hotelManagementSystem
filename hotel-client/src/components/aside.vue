@@ -35,16 +35,24 @@
             <i class="iconfont icon-dingfang"></i>
             <span slot="title">开房功能</span>
           </el-menu-item>
-          <el-menu-item index="/viewRoom">
+          <el-menu-item index="/transferRoom">
             <i class="iconfont icon-tiaofang-"></i>
             <span slot="title">调房功能</span>
           </el-menu-item>
-          <el-menu-item index="/checkOut">
+          <el-menu-item index="/bookRoom">
+            <i class="iconfont icon-dd_active"></i>
+            <span slot="title">生成订单</span>
+          </el-menu-item>
+          <el-menu-item index="/updatedBook">
+            <i class="iconfont icon-updatedBook"></i>
+            <span slot="title">修改订单</span>
+          </el-menu-item>
+          <el-menu-item index="/settlement">
             <i class="iconfont icon-jiezhang"></i>
             <span slot="title">结算功能</span>
           </el-menu-item>
-          <el-menu-item index="/viewRoom">
-            <i class="iconfont icon-tiaofang-"></i>
+          <el-menu-item index="/checkOut">
+            <i class="iconfont icon-tuifang"></i>
             <span slot="title">退房功能</span>
           </el-menu-item>
         </el-submenu>

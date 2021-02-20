@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const OrderSchema = new Schema({
+const BookSchema = new Schema({
   orderId: {  // 在需要取出来的值后面加上require
     type: String,
     unique: true,
     require: true
   },
-  roomId: { // 房间号
+  roomId: { // 房间id号
     type: String,
   },
   order1Name: { // 姓名
@@ -61,6 +61,6 @@ const OrderSchema = new Schema({
   remark: { // 备注
     type: String
   }
-}, { collection: 'order', versionKey: false});
+}, { collection: 'book', versionKey: false});
 
-module.exports = mongoose.model('order', OrderSchema);
+module.exports = mongoose.model('book', BookSchema);

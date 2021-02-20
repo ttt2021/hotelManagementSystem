@@ -101,6 +101,54 @@ const orderRoom = (data) => {
 	})
 }
 
+const getRoomInfo = (data) => {
+	return axios({
+		url: '/getRoomInfo',
+		method: 'post',
+		data
+	})
+}
+
+const bookRoomInfo = (data) => {
+	return axios({
+		url: '/bookRoomInfo',
+		method: 'post',
+		data
+	})
+}
+
+const getBookList = (data) => {
+	return axios({
+		url: '/getBookList',
+		method: 'post',
+		data
+	})
+}
+
+const cancelBook = (data) => {
+	return axios({
+		url: '/cancelBook',
+		method: 'post',
+		data
+	})
+}
+
+const getBookInfo = (data) => {
+	return axios({
+		url: '/getBookInfo',
+		method: 'post',
+		data
+	})
+}
+
+const updatedBookInfo = (data) => {
+	return axios({
+		url: '/updatedBookInfo',
+		method: 'post',
+		data
+	})
+}
+
 export default {
   addRoomKind,
 	getRoomKind,
@@ -114,5 +162,11 @@ export default {
 	getKindRoom,
 	getOrderRoom,
 	searchOrderRoom,
-	orderRoom
+	orderRoom,
+	getRoomInfo,
+	bookRoomInfo,
+	getBookList,
+	cancelBook,
+	getBookInfo,
+	updatedBookInfo
 }

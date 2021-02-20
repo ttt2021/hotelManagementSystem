@@ -158,6 +158,38 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views/checkOut/index.vue')
+      },
+      {
+        path: '/settlement',
+        name: 'settlement',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/settlement/index.vue')
+      },
+      {
+        path: '/bookRoom',
+        name: 'bookRoom',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/bookRoom/index.vue')
+      },
+      {
+        path: '/updatedBook',
+        name: 'updatedBook',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/updatedBook/index.vue')
+      },
+      {
+        path: '/transferRoom',
+        name: 'transferRoom',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/transferRoom/index.vue')
       }
     ]
   },
