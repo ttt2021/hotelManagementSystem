@@ -53,7 +53,7 @@ const BookSchema = new Schema({
     type: String
   },
   totalCost: { // 费用
-    type: String
+    type: Number
   },
   addUser: { // 添加人
     type: String,

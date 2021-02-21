@@ -3,12 +3,8 @@
     <div class="title-container">
       <div class="title-wrapper">
         <i class="el-icon-edit-outline"></i>
-        <div class="title">未开客房信息列表</div>
+        <div class="title">订单列表</div>
       </div>
-      <!-- <div class="add-btn">
-        <el-button @click="toggleSelection">取消</el-button>
-        <el-button type="primary" @click="order">开房</el-button>
-      </div> -->
     </div>
     <div class="search-wrapper">
       <div class="search-title">
@@ -18,6 +14,13 @@
       <div class="search-title search-username">
         <span class="info-title">名称：</span
         ><el-input v-model="inputName" placeholder="请输入房间名称"></el-input>
+      </div>
+      <div class="search-title">
+        <span class="info-title workNum-title">入住人：</span
+        ><el-input
+          v-model="inputOrderName"
+          placeholder="请输入入住人姓名"
+        ></el-input>
       </div>
       <div class="search-title">
         <span class="info-title">类型：</span
@@ -31,62 +34,67 @@
       ></el-button>
     </div>
     <div class="drink-list">
-      <!-- <el-table
-        ref="multipleTable"
-        style="width: 100%"
-        :data="
-          roomList.slice((currentPage - 1) * pagesize, currentPage * pagesize)
-        "
-        @selection-change="handleSelectionChange"
-      > -->
       <el-table
         style="width: 100%"
         :data="
           roomList.slice((currentPage - 1) * pagesize, currentPage * pagesize)
         "
       >
-        <!-- <el-table-column type="selection"> </el-table-column> -->
         <el-table-column type="index" label="序号"></el-table-column>
         <el-table-column label="房间号">
           <template slot-scope="scope">
-            <span v-html="scope.row.num"></span>
+            <span v-html="scope.row.roomInfo.num"></span>
           </template>
         </el-table-column>
         <el-table-column label="房间名称">
           <template slot-scope="scope">
-            <span v-html="scope.row.name"></span>
+            <span v-html="scope.row.roomInfo.name"></span>
           </template>
         </el-table-column>
-        <el-table-column label="房间类型">
+        <el-table-column label="房间类型" width="100px">
           <template slot-scope="scope">
-            <span v-html="scope.row.kind"></span>
+            <span v-html="scope.row.roomInfo.kind"></span>
           </template>
         </el-table-column>
-        <el-table-column label="房间状态">
+        <el-table-column prop="roomInfo.price" label="单价"></el-table-column>
+        <el-table-column label="入住人1">
           <template slot-scope="scope">
-            <span v-html="scope.row.region"></span>
+            <span v-html="scope.row.order1Name"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="price" label="单价"></el-table-column>
+        <el-table-column label="入住人2">
+          <template slot-scope="scope">
+            <span v-html="scope.row.order2Name"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="入住人3">
+          <template slot-scope="scope">
+            <span v-html="scope.row.order3Name"></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="入住人4">
+          <template slot-scope="scope">
+            <span v-html="scope.row.order4Name"></span>
+          </template>
+        </el-table-column>
         <el-table-column
-          prop="drinkings"
-          label="酒水配置"
-          width="580px"
+          prop="orderTime"
+          label="入住时间"
+          width="160px"
         ></el-table-column>
-        <el-table-column label="操作" width="200px">
+        <el-table-column
+          prop="expectedCheckout"
+          label="预退时间"
+          width="160px"
+        ></el-table-column>
+        <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              class="updateBtn"
-              @click="handleOpen(scope.row)"
-              ><i class="iconfont icon-update"></i>开房</el-button
+              class="deleteBtn"
+              @click="handleCheckOut(scope.row)"
+              ><i class="iconfont icon-checkOut"></i>退房</el-button
             >
-            <el-button
-                size="mini"
-                class="adjustBtn"
-                @click="handleAdjust(scope.row)"
-                ><i class="iconfont icon-tiao"></i>调房</el-button
-              >
           </template>
         </el-table-column>
       </el-table>
@@ -113,41 +121,18 @@ export default {
       roomList: [],
       currentPage: 1, //初始页
       pagesize: 5, // 每页数据
-      show: false,
       inputNum: "",
       inputName: "",
       inputKind: "",
-      // multipleSelection: [],
+      inputOrderName: "",
     };
   },
   mounted() {
     this.getList();
   },
   methods: {
-    // order() {
-      // // 多行数据路由跳转
-      // console.log(this.multipleSelection);
-      // let num = {};
-      // for (let i = 0; i < this.multipleSelection.length; i++) {
-      //   num[`roomId${i}`] = this.multipleSelection[i].roomId;
-      // }
-      // console.log(num);
-      // this.$router.push({
-      //   path: "/settlement",
-      //   query: {
-      //     rooms: num
-      //   }
-      // });
-    // },
-    // toggleSelection() {
-    //   this.$refs.multipleTable.clearSelection();
-    // },
-    // handleSelectionChange(val) {
-    //   console.log(val);
-    //   this.multipleSelection = val;
-    // },
     getList() {
-      this.$http.getOrderRoom({}).then((res) => {
+      this.$http.getOrderList().then((res) => {
         console.log(res);
         res = JSON.parse(res);
         if (res.code == 0) {
@@ -157,11 +142,6 @@ export default {
             type: "error",
           });
           return;
-        }
-        for (let i = 0; i < res.data.length; i++) {
-          res.data[i].remark =
-            res.data[i].remark === "" ? "无" : res.data[i].remark;
-          res.data[i].drinkings = res.data[i].drinkings.join(" 、");
         }
         this.roomList = res.data;
         console.log(this.roomList);
@@ -176,41 +156,18 @@ export default {
       this.currentPage = currentPage;
       console.log(this.currentPage); //点击第几页
     },
-    handleAdjust(info) {
-      // this.$router.push('/transferRoom')
-      this.$router.push({
-        path: "/transferRoom",
-        query: {
-          roomId: info.roomId,
-        },
-      });
-    },
-    handleOpen(info) {
+    handleCheckOut(info) {
       console.log(info);
-      this.$router.push({
-        path: "/bookRoom",
-        query: {
-          roomId: info.roomId,
-        },
-      });
-    },
-    searchRoom: tool.throttle(function () {
-      console.log(this.inputNum, this.inputName, this.inputKind);
+      let username = JSON.parse(localStorage.getItem("token")).username;
+      console.log(username);
       this.$http
-        .searchOrderRoom({
-          num: this.inputNum,
-          name: this.inputName,
-          kind: this.inputKind,
+        .getCheckOutInfo({
+          orderId: info.orderId,
+          checkOutUser: username,
         })
         .then((res) => {
           console.log(res);
           res = JSON.parse(res);
-          for (let i = 0; i < res.data.length; i++) {
-            res.data[i].remark =
-              res.data[i].remark === "" ? "无" : res.data[i].remark;
-            res.data[i].drinkings = res.data[i].drinkings.join(" 、");
-          }
-          this.roomList = res.data;
           if (res.code == 0) {
             this.$message({
               showClose: true,
@@ -219,33 +176,77 @@ export default {
             });
             return;
           }
+          this.$router.push("/checkOut");
+        });
+    },
+    searchRoom: tool.throttle(function () {
+      console.log(this.inputNum, this.inputName, this.inputKind);
+      this.$http
+        .searchOrderList({
+          num: this.inputNum,
+          name: this.inputName,
+          kind: this.inputKind,
+          ordername: this.inputOrderName,
+        })
+        .then((res) => {
+          console.log(res);
+          res = JSON.parse(res);
+          if (res.code == 0) {
+            this.$message({
+              showClose: true,
+              message: res.msg,
+              type: "error",
+            });
+            return;
+          }
+          this.roomList = res.data;
           // 结果高亮显示
           for (let i = 0; i < res.data.length; i++) {
             const numReg = new RegExp(this.inputNum, "i");
             if (numReg && this.inputNum !== "") {
-              res.data[i].num = res.data[i].num.replace(
+              res.data[i].roomInfo.num = res.data[i].roomInfo.num.replace(
                 numReg,
                 `<span style="color: #FF0033;font-weight: bold;">${this.inputNum}</span>`
               );
             }
             const nameReg = new RegExp(this.inputName, "i");
             if (nameReg && this.inputName !== "") {
-              res.data[i].name = res.data[i].name.replace(
+              res.data[i].roomInfo.name = res.data[i].roomInfo.name.replace(
                 nameReg,
                 `<span style="color: #FF0033;font-weight: bold;">${this.inputName}</span>`
               );
             }
             const kindReg = new RegExp(this.inputKind, "i");
             if (kindReg && this.inputKind !== "") {
-              res.data[i].kind = res.data[i].kind.replace(
+              res.data[i].roomInfo.kind = res.data[i].roomInfo.kind.replace(
                 kindReg,
                 `<span style="color: #FF0033;font-weight: bold;">${this.inputKind}</span>`
+              );
+            }
+            const orderNameReg = new RegExp(this.inputOrderName, "i");
+            if (orderNameReg && this.inputOrderName !== "") {
+              res.data[i].order1Name = res.data[i].order1Name.replace(
+                orderNameReg,
+                `<span style="color: #FF0033;font-weight: bold;">${this.inputOrderName}</span>`
+              );
+              res.data[i].order2Name = res.data[i].order2Name.replace(
+                orderNameReg,
+                `<span style="color: #FF0033;font-weight: bold;">${this.inputOrderName}</span>`
+              );
+              res.data[i].order3Name = res.data[i].order3Name.replace(
+                orderNameReg,
+                `<span style="color: #FF0033;font-weight: bold;">${this.inputOrderName}</span>`
+              );
+              res.data[i].order4Name = res.data[i].order4Name.replace(
+                orderNameReg,
+                `<span style="color: #FF0033;font-weight: bold;">${this.inputOrderName}</span>`
               );
             }
           }
           this.inputNum = "";
           this.inputName = "";
           this.inputKind = "";
+          this.inputOrderName = "";
         });
     }),
   },
@@ -302,10 +303,6 @@ export default {
 
 .deleteBtn {
   color: rgb(255, 61, 72);
-}
-
-.adjustBtn {
-  color: #12db2d;
 }
 
 .updateBtn {

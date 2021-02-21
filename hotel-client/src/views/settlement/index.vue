@@ -13,8 +13,8 @@
       </div>
       <div class="drink-list">
         <el-table style="width: 100%" :data="roomList">
-          <el-table-column type="index" label="序号"></el-table-column>
-          <el-table-column prop="roomInfo.num" label="房间号"></el-table-column>
+          <el-table-column type="index" label="序号" width="50px"></el-table-column>
+          <el-table-column prop="roomInfo.num" label="房间号" width="80px"></el-table-column>
           <el-table-column
             prop="roomInfo.name"
             label="房间名称"
@@ -23,7 +23,7 @@
             prop="roomInfo.kind"
             label="房间类型"
           ></el-table-column>
-          <el-table-column prop="roomInfo.price" label="单价"></el-table-column>
+          <el-table-column prop="roomInfo.price" label="单价" width="50px"></el-table-column>
           <el-table-column prop="order1Name" label="入住人1"></el-table-column>
           <el-table-column prop="order2Name" label="入住人2"></el-table-column>
           <el-table-column prop="order3Name" label="入住人3"></el-table-column>
@@ -171,16 +171,9 @@
     </div>
     <div class="total-wrapper">
       <van-submit-bar
-        :price="0"
-        button-text="提交订单"
-        @submit="onSubmit"
-        v-if="roomList.length == 0"
-      />
-      <van-submit-bar
         :price="totalPrice"
         button-text="提交订单"
         @submit="onSubmit"
-        v-else
       />
     </div>
   </div>
@@ -329,7 +322,7 @@ export default {
             message: res.msg,
             type: "success",
           });
-          this.$router.push('/checkOut')
+          this.$router.push('/orderManagement')
         });
     }),
   },
@@ -400,6 +393,10 @@ export default {
   color: rgb(239, 179, 54);
 }
 
+.adjustBtn {
+  color: #12db2d;
+}
+
 /deep/.van-popup {
   padding: 20px;
   width: 60%;
@@ -410,9 +407,9 @@ export default {
   justify-content: center;
 }
 
-.btn-wrapper /deep/.el-button + .el-button {
-  margin-left: 50px;
-}
+// .btn-wrapper /deep/.el-button + .el-button {
+//   margin-left: 50px;
+// }
 
 .search-wrapper {
   margin-bottom: 10px;
@@ -473,5 +470,9 @@ export default {
 
 .van-submit-bar {
   position: static;
+}
+
+.el-button--mini, .el-button--mini.is-round {
+  padding: 7px 5px;
 }
 </style>

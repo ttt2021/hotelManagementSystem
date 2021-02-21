@@ -21,5 +21,12 @@ router.post('/getBookList', room_controller.getBookList)
 router.post('/cancelBook', room_controller.cancelBook)
 router.post('/getBookInfo', room_controller.getBookInfo)
 router.post('/updatedBookInfo', room_controller.updatedBookInfo)
+router.post('/getOrderList', room_controller.getOrderList)
+router.post('/searchOrderList', room_controller.searchOrderList)
+router.post('/getCheckOutInfo', room_controller.getCheckOutInfo)
+router.post('/getCheckOutList', room_controller.getCheckOutList)
+router.post('/cancelCheckOut', room_controller.cancelCheckOut)
+router.post('/updateCheckInfo', room_controller.updateCheckInfo)
+router.post('/checkedOut', room_controller.checkedOut)
 
 module.exports = router

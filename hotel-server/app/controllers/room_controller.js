@@ -2,7 +2,9 @@ const room_col = require('../models/room')
 const roomDetail_col = require('../models/roomDetail')
 const roomImg_col = require('../models/roomImg')
 const order_col = require('../models/order')
+const historyOrder_col = require('../models/historyOrder')
 const book_col = require('../models/book')
+const checkOut_col = require('../models/checkOut')
 const formatTime = require('../utils/formatTime')
 const { v1: uuidv1 } = require('uuid');
 
@@ -725,29 +727,327 @@ const orderRoom = async (ctx) => {
       }
     }
   }
+}
 
-  // let result = await order_col.create({
-  //   orderId: orderId,
-  //   roomId: req.num,
-  //   orderName: req.orderName,
-  //   orderSex: req.orderSex,
-  //   orderIdCard: req.orderIdCard,
-  //   orderTime: time,
-  //   addUser: req.addUser,
-  //   remark: req.remark
-  // })
+const getOrderList = async (ctx) => {
+  let result = await order_col.find({}).lean()
+  console.log(result)
+  if (result) {
+    for (let i = 0; i < result.length; i++) {
+      let roomInfo = await roomDetail_col.findOne({
+        roomId: result[i].roomId
+      })
+      result[i].roomInfo = roomInfo
+    }
+    console.log(result)
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: result
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '暂无订单'
+    }
+  }
+}
 
-  // if (result) {
-  //   ctx.body = {
-  //     code: 1,
-  //     msg: '开房成功'
-  //   }
-  // } else {
-  //   ctx.body = {
-  //     code: 0,
-  //     msg: '开房失败'
-  //   }
-  // }
+const searchOrderList = async (ctx) => {
+  let req = ctx.request.body
+  console.log(req)
+
+  // 复杂条件查询 or
+  let result = await order_col.find({
+    $or: [{
+      order1Name: {
+        $regex: '.*' + req.ordername,
+        $options: 'i'
+      }
+    }, {
+      order2Name: {
+        $regex: '.*' + req.ordername,
+        $options: 'i'
+      }
+    }, {
+      order3Name: {
+        $regex: '.*' + req.ordername,
+        $options: 'i'
+      }
+    }, {
+      order4Name: {
+        $regex: '.*' + req.ordername,
+        $options: 'i'
+      }
+    }]
+  }).lean()
+  console.log(result)
+
+  if (result) {
+    let list = []
+    for (let i = 0; i < result.length; i++) {
+      let roomInfo = await roomDetail_col.findOne({
+        roomId: result[i].roomId,
+        num: {
+          $regex: '.*' + req.num,
+          $options: 'i'
+        },
+        name: {
+          $regex: '.*' + req.name,
+          $options: 'i'
+        },
+        kind: {
+          $regex: '.*' + req.kind,
+          $options: 'i'
+        },
+      })
+      console.log(roomInfo)
+      if (roomInfo !== null) {
+        result[i].roomInfo = roomInfo
+        list.push(result[i])
+      }
+    }
+    console.log(list)
+    if (list.length == 0) {
+      ctx.body = {
+        code: 0,
+        msg: '暂无订单'
+      }
+      return
+    }
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: list
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '暂无订单'
+    }
+  }
+}
+
+const getCheckOutInfo = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let result = await checkOut_col.findOne({
+    orderId: req.orderId
+  })
+  console.log(result)
+
+  // 将信息写入退房表中
+  if (result == null) {
+    let addInfo = await checkOut_col.create({
+      orderId: req.orderId,
+      checkOutUser: req.checkOutUser,
+      drinkings: [],
+      drinkingsCost: 0,
+      remark: ''
+    })
+    console.log(addInfo)
+    if (addInfo) {
+      ctx.body = {
+        code: 1,
+        msg: '操作成功'
+      }
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '操作失败'
+      }
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '已存在退房状态中，请去结算'
+    }
+  }
+}
+
+const getCheckOutList = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let checkOutList = await checkOut_col.find({
+    checkOutUser: req.checkOutUser
+  }).lean()
+  console.log(checkOutList)
+
+  if (checkOutList.length !== 0) {
+    for (let i = 0; i < checkOutList.length; i++) {
+      let orderInfo = await order_col.findOne({
+        orderId: checkOutList[i].orderId
+      })
+      console.log(orderInfo)
+      checkOutList[i].orderInfo = orderInfo
+
+      // 计算实际住的天数
+      let currentTime = formatTime.getNowTime()
+      console.log(currentTime)
+      let days = formatTime.getDays(orderInfo.orderTime, currentTime)
+      console.log(days)
+
+      let roomInfo = await roomDetail_col.findOne({
+        roomId: orderInfo.roomId
+      })
+      console.log(roomInfo)
+      checkOutList[i].roomInfo = roomInfo
+      // 实际房费
+      let totalCost = roomInfo.price * days // 单价 * 天数 
+      console.log(totalCost)
+      checkOutList[i].actualCost = totalCost
+    }
+    console.log(checkOutList)
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: checkOutList
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '暂无退房'
+    }
+  }
+}
+
+const cancelCheckOut = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let result = await checkOut_col.remove({
+    orderId: req.orderId
+  })
+  console.log(result)
+  if (result.deletedCount == 1) {
+    ctx.body = {
+      code: 1,
+      msg: '取消成功'
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '取消失败'
+    }
+  }
+}
+
+const updateCheckInfo = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let result = await checkOut_col.updateOne({
+    orderId: req.orderId
+  }, {
+    drinkings: req.drinkings,
+    drinkingsCost: req.drinkingsCost
+  })
+
+  if (result) {
+    ctx.body = {
+      code: 1,
+      msg: '修改成功'
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '修改失败'
+    }
+  }
+}
+
+const checkedOut = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let currentTime = formatTime.getNowTime()
+  console.log(currentTime)
+
+  // 获取订单信息 order checkOut
+  // 将信息存入历史记录中 historyOrder
+  // 将客房状态改变 roomDetail
+  // 移除订单 order checkOut
+  for (let i = 0; i < req.orderList.length; i++) {
+    console.log(req.orderList[i])
+    let orderInfo = await order_col.findOne({
+      orderId: req.orderList[i].orderId
+    })
+    console.log(orderInfo)
+    let checkInfo = await checkOut_col.findOne({
+      orderId: req.orderList[i].orderId
+    })
+    console.log(checkInfo)
+
+    let addInfo = await historyOrder_col.create({
+      orderId: req.orderList[i].orderId,
+      roomId: orderInfo.roomId,
+      order1Name: orderInfo.order1Name,
+      order1Sex: orderInfo.order1Sex,
+      order1IdCard: orderInfo.order1IdCard,
+      order2Name: orderInfo.order2Name,
+      order2Sex: orderInfo.order2Sex,
+      order2IdCard: orderInfo.order2IdCard,
+      order3Name: orderInfo.order3Name,
+      order3Sex: orderInfo.order3Sex,
+      order3IdCard: orderInfo.order3IdCard,
+      order4Name: orderInfo.order4Name,
+      order4Sex: orderInfo.order4Sex,
+      order4IdCard: orderInfo.order4IdCard,
+      orderTime: orderInfo.orderTime,
+      expectedCheckout: orderInfo.expectedCheckout,
+      checkOutTime: currentTime,
+      totalCost: Number(req.orderList[i].totalCost),
+      actualCost: Number(req.orderList[i].actualCost),
+      prevCost: orderInfo.totalCost,
+      addUser: orderInfo.addUser,
+      drinkings: checkInfo.drinkings,
+      drinkingsCost: checkInfo.drinkingsCost,
+      checkOutUser: checkInfo.checkOutUser,
+      remark: checkInfo.remark
+    })
+    if (addInfo) {
+      // 改变客房状态
+      let changed = await roomDetail_col.updateOne({
+        roomId: orderInfo.roomId
+      }, {
+        region: '清理中'
+      })
+      console.log(changed)
+      if (changed.nModified == 1) {
+        let removedOrder = await order_col.remove({
+          orderId: req.orderList[i].orderId
+        })
+        console.log(removedOrder)
+        let removedCheck = await checkOut_col.remove({
+          orderId: req.orderList[i].orderId
+        })
+        console.log(removedCheck)
+        if (removedCheck.deletedCount == 1 && removedOrder.deletedCount == 1) {
+          ctx.body = {
+            code: 1,
+            msg: '结算成功'
+          }
+        } else {
+          ctx.body = {
+            code: 0,
+            msg: '结算失败'
+          }
+        }
+      } else {
+        ctx.body = {
+          code: 0,
+          msg: '结算失败'
+        }
+      }
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '结算失败'
+      }
+    }
+  }
 }
 
 module.exports = {
@@ -769,5 +1069,12 @@ module.exports = {
   getBookList,
   cancelBook,
   getBookInfo,
-  updatedBookInfo
+  updatedBookInfo,
+  getOrderList,
+  searchOrderList,
+  getCheckOutInfo,
+  getCheckOutList,
+  cancelCheckOut,
+  updateCheckInfo,
+  checkedOut
 }

@@ -60,11 +60,6 @@
                   <img-verify ref="verifyRef"></img-verify>
                 </template>
               </van-field>
-
-              <!-- <van-radio-group v-model="radio">
-              <van-radio name="1" class="radio-left">员工</van-radio>
-              <van-radio name="2">管理员</van-radio>
-            </van-radio-group> -->
             </van-cell-group>
 
             <van-row>

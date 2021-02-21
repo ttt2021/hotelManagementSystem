@@ -1,4 +1,5 @@
 const drink_col = require('../models/drink')
+const checkOut_col = require('../models/checkOut')
 const formatTime = require('../utils/formatTime')
 const roomDetail_col = require('../models/roomDetail')
 const { v1: uuidv1 } = require('uuid');
@@ -121,9 +122,91 @@ const delDrink = async (ctx) => {
   }
 }
 
+const checkDrinkList = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let list = []
+  for (let i = 0; i < req.drinks.length; i++) {
+    let drinkInfo = await drink_col.findOne({
+      name: req.drinks[i]
+    })
+    console.log(drinkInfo)
+    list.push({
+      name: req.drinks[i],
+      price: drinkInfo.price,
+      count: 0
+    })
+  }
+  console.log(list)
+  if (list.length !== 0) {
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: list
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '房间无酒水'
+    }
+  }
+}
+
+const updateDrinkList = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let orderInfo = await checkOut_col.findOne({
+    orderId: req.orderId
+  })
+  console.log(orderInfo)
+  let list = []
+  for (let i = 0; i < req.drinks.length; i++) {
+    let drinkInfo = await drink_col.findOne({
+      name: req.drinks[i]
+    })
+    console.log(drinkInfo)
+    for (let j = 0; j < orderInfo.drinkings.length; j++) {
+      if (drinkInfo.name == orderInfo.drinkings[j].name) {
+        list.push({
+          name: req.drinks[i],
+          price: drinkInfo.price,
+          count: Number(orderInfo.drinkings[j].count)
+        })
+        orderInfo.drinkings.splice(j, 1)
+        break
+      }
+    }
+    // console.log(list.length, i)
+    if (list.length - 1 !== i) {
+      list.push({
+        name: req.drinks[i],
+        price: drinkInfo.price,
+        count: 0
+      })
+    }
+  }
+  console.log(list)
+  if (list.length !== 0) {
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: list
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '房间无酒水'
+    }
+  }
+}
+
 module.exports = {
   addDrinking,
   getDrinkList,
   updateDrink,
-  delDrink
+  delDrink,
+  checkDrinkList,
+  updateDrinkList
 }

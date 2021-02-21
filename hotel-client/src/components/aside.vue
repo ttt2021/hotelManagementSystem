@@ -35,10 +35,6 @@
             <i class="iconfont icon-dingfang"></i>
             <span slot="title">开房功能</span>
           </el-menu-item>
-          <el-menu-item index="/transferRoom">
-            <i class="iconfont icon-tiaofang-"></i>
-            <span slot="title">调房功能</span>
-          </el-menu-item>
           <el-menu-item index="/bookRoom">
             <i class="iconfont icon-dd_active"></i>
             <span slot="title">生成订单</span>
@@ -49,13 +45,21 @@
           </el-menu-item>
           <el-menu-item index="/settlement">
             <i class="iconfont icon-jiezhang"></i>
-            <span slot="title">结算功能</span>
+            <span slot="title">订单结算</span>
+          </el-menu-item>
+          <el-menu-item index="/transferRoom">
+            <i class="iconfont icon-tiaofang-"></i>
+            <span slot="title">调房功能</span>
           </el-menu-item>
           <el-menu-item index="/checkOut">
             <i class="iconfont icon-tuifang"></i>
             <span slot="title">退房功能</span>
           </el-menu-item>
         </el-submenu>
+        <el-menu-item index="/orderManagement" class="firstMenu">
+          <i class="iconfont icon-guanli1"></i>
+          <span slot="title">订单管理</span>
+        </el-menu-item>
         <el-submenu index="3" v-if="auth == 5">
           <template slot="title">
             <i class="iconfont icon-room"></i>
@@ -68,6 +72,10 @@
           <el-menu-item index="/viewRoom">
             <i class="iconfont icon-chaxun"></i>
             <span slot="title">查询客房</span>
+          </el-menu-item>
+          <el-menu-item index="/drinkRoom">
+            <i class="iconfont icon-jiushuiyinliao"></i>
+            <span slot="title">客房酒水</span>
           </el-menu-item>
         </el-submenu>
         <el-menu-item index="/staff" class="firstMenu" v-if="auth == 5">

@@ -149,6 +149,61 @@ const updatedBookInfo = (data) => {
 	})
 }
 
+const getOrderList = (data) => {
+	return axios({
+		url: '/getOrderList',
+		method: 'post'
+	})
+}
+
+const searchOrderList = (data) => {
+	return axios({
+		url: '/searchOrderList',
+		method: 'post',
+		data
+	})
+}
+
+const getCheckOutInfo = (data) => {
+	return axios({
+		url: '/getCheckOutInfo',
+		method: 'post',
+		data
+	})
+}
+
+const getCheckOutList = (data) => {
+	return axios({
+		url: '/getCheckOutList',
+		method: 'post',
+		data
+	})
+}
+
+const cancelCheckOut = (data) => {
+	return axios({
+		url: '/cancelCheckOut',
+		method: 'post',
+		data
+	})
+}
+
+const updateCheckInfo = (data) => {
+	return axios({
+		url: '/updateCheckInfo',
+		method: 'post',
+		data
+	})
+}
+
+const checkedOut = (data) => {
+	return axios({
+		url: '/checkedOut',
+		method: 'post',
+		data
+	})
+}
+
 export default {
   addRoomKind,
 	getRoomKind,
@@ -168,5 +223,12 @@ export default {
 	getBookList,
 	cancelBook,
 	getBookInfo,
-	updatedBookInfo
+	updatedBookInfo,
+	getOrderList,
+	searchOrderList,
+	getCheckOutInfo,
+	getCheckOutList,
+	cancelCheckOut,
+	updateCheckInfo,
+	checkedOut
 }

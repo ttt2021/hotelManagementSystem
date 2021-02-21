@@ -31,9 +31,27 @@ const delDrink = (data) => {
 	})
 }
 
+const checkDrinkList = (data) => {
+	return axios({
+		url: '/checkDrinkList',
+		method: 'post',
+		data
+	})
+}
+
+const updateDrinkList = (data) => {
+	return axios({
+		url: '/updateDrinkList',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	addDrinking,
 	getDrinkList,
 	updateDrink,
-	delDrink
+	delDrink,
+	checkDrinkList,
+	updateDrinkList
 }

@@ -69,7 +69,7 @@ const getDays = (start, end) => {
   let day2 = new Date(dt2)
 
   let date = day2.getTime() - day1.getTime() // 时间相差毫秒数
-  return Math.floor(date / (24 * 3600 * 1000))
+  return Math.ceil(date / (24 * 3600 * 1000))
 }
 
 module.exports = {

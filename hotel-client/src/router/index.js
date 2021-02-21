@@ -190,6 +190,22 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views/transferRoom/index.vue')
+      },
+      {
+        path: '/drinkRoom',
+        name: 'drinkRoom',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/drinkRoom/index.vue')
+      },
+      {
+        path: '/orderManagement',
+        name: 'orderManagement',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/orderManagement/index.vue')
       }
     ]
   },
