@@ -115,6 +115,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.orderInfo === null)
     this.getInfo();
   },
   methods: {

@@ -206,6 +206,30 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views/orderManagement/index.vue')
+      },
+      {
+        path: '/checkIn',
+        name: 'checkIn',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/checkIn/index.vue')
+      },
+      {
+        path: '/historicalOrder',
+        name: 'historicalOrder',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/historicalOrder/index.vue')
+      },
+      {
+        path: '/statistics',
+        name: '/statistics',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views//statistics/index.vue')
       }
     ]
   },

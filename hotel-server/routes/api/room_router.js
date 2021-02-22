@@ -28,5 +28,9 @@ router.post('/getCheckOutList', room_controller.getCheckOutList)
 router.post('/cancelCheckOut', room_controller.cancelCheckOut)
 router.post('/updateCheckInfo', room_controller.updateCheckInfo)
 router.post('/checkedOut', room_controller.checkedOut)
+router.post('/adjustBook', room_controller.adjustBook)
+router.post('/adjustCheckedOut', room_controller.adjustCheckedOut)
+router.post('/getHistoricalList', room_controller.getHistoricalList)
+router.post('/searchHistoryList', room_controller.searchHistoryList)
 
 module.exports = router

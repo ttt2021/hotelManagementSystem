@@ -46,7 +46,7 @@
               label="已支付"
             ></el-table-column>
             <el-table-column prop="totalCost" label="总费用"></el-table-column>
-            <el-table-column label="操作" width="250px">
+            <el-table-column label="操作" width="200px">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -60,12 +60,12 @@
                   @click="handleUpdated(scope.row)"
                   ><i class="iconfont icon-update"></i>修改</el-button
                 >
-                <el-button
+                <!-- <el-button
                   size="mini"
                   class="deleteBtn"
                   @click="handleCancel(scope.row)"
                   ><i class="iconfont icon-quxiao"></i>取消</el-button
-                >
+                > -->
               </template>
             </el-table-column>
           </el-table>
@@ -228,7 +228,7 @@
                 </div>
                 <div class="info-wrapper">
                   <div class="name">还需付费：</div>
-                  <div class="content">{{ totalPrice / 100 }}元</div>
+                  <div class="content">{{ oldPrice / 100 }}元</div>
                 </div>
               </div>
             </span>
@@ -277,13 +277,9 @@
             <i class="el-icon-edit-outline"></i>
             <div class="title">新房间信息列表</div>
           </div>
-          <!-- <div class="add-btn">
-        <el-button @click="toggleSelection">取消</el-button>
-        <el-button type="primary" @click="order">开房</el-button>
-      </div> -->
         </div>
         <div class="drink-list">
-          <el-table style="width: 100%" :data="roomList">
+          <el-table style="width: 100%" :data="newRoomList">
             <el-table-column
               type="index"
               label="序号"
@@ -333,16 +329,13 @@
               label="退房时间"
               width="160px"
             ></el-table-column>
-            <el-table-column label="操作" width="250px">
+            <el-table-column label="操作" width="200px">
               <template slot-scope="scope">
                 <el-button
                   size="mini"
                   class="viewBtn"
-                  @click="handleView(scope.row)"
+                  @click="handleNewView(scope.row)"
                   ><i class="iconfont icon-view"></i>详情</el-button
-                >
-                <el-button size="mini" class="adjustBtn" @click="handleAdjust"
-                  ><i class="iconfont icon-tiao"></i>调房</el-button
                 >
                 <el-button
                   size="mini"
@@ -354,110 +347,111 @@
             </el-table-column>
           </el-table>
           <el-dialog
-            :visible.sync="centerDialogVisible"
+            :visible.sync="showDetail"
             width="60%"
             center
             title="订房详情"
+            v-if="newRoomList.length !== 0"
           >
-            <span class="roomImg-infos" v-if="roomList.length !== 0">
+            <span class="roomImg-infos">
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">房间号：</div>
-                  <div class="content">{{ detailBook.roomInfo.num }}</div>
+                  <div class="content">{{ detailInfo.roomInfo.num }}</div>
                 </div>
                 <div class="info-wrapper">
                   <div class="name">房间名称：</div>
-                  <div class="content">{{ detailBook.roomInfo.name }}</div>
+                  <div class="content">{{ detailInfo.roomInfo.name }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">房间类型：</div>
-                  <div class="content">{{ detailBook.roomInfo.kind }}</div>
+                  <div class="content">{{ detailInfo.roomInfo.kind }}</div>
                 </div>
                 <div class="info-wrapper">
                   <div class="name">单价：</div>
-                  <div class="content">{{ detailBook.roomInfo.price }}</div>
+                  <div class="content">{{ detailInfo.roomInfo.price }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">入住人1：</div>
-                  <div class="content">{{ detailBook.order1Name }}</div>
+                  <div class="content">{{ detailInfo.order1Name }}</div>
                 </div>
                 <div class="info-wrapper">
                   <div class="name">性别1：</div>
-                  <div class="content">{{ detailBook.order1Sex }}</div>
+                  <div class="content">{{ detailInfo.order1Sex }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">证件号1：</div>
-                  <div class="content">{{ detailBook.order1IdCard }}</div>
+                  <div class="content">{{ detailInfo.order1IdCard }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">入住人2：</div>
-                  <div class="content">{{ detailBook.order2Name }}</div>
+                  <div class="content">{{ detailInfo.order2Name }}</div>
                 </div>
                 <div class="info-wrapper">
                   <div class="name">性别2：</div>
-                  <div class="content">{{ detailBook.order2Sex }}</div>
+                  <div class="content">{{ detailInfo.order2Sex }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">证件号2：</div>
-                  <div class="content">{{ detailBook.order2IdCard }}</div>
+                  <div class="content">{{ detailInfo.order2IdCard }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">入住人3：</div>
-                  <div class="content">{{ detailBook.order3Name }}</div>
+                  <div class="content">{{ detailInfo.order3Name }}</div>
                 </div>
                 <div class="info-wrapper">
                   <div class="name">性别3：</div>
-                  <div class="content">{{ detailBook.order3Sex }}</div>
+                  <div class="content">{{ detailInfo.order3Sex }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">证件号3：</div>
-                  <div class="content">{{ detailBook.order3IdCard }}</div>
+                  <div class="content">{{ detailInfo.order3IdCard }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">入住人4：</div>
-                  <div class="content">{{ detailBook.order4Name }}</div>
+                  <div class="content">{{ detailInfo.order4Name }}</div>
                 </div>
                 <div class="info-wrapper">
                   <div class="name">性别4：</div>
-                  <div class="content">{{ detailBook.order4Sex }}</div>
+                  <div class="content">{{ detailInfo.order4Sex }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">证件号4：</div>
-                  <div class="content">{{ detailBook.order4IdCard }}</div>
+                  <div class="content">{{ detailInfo.order4IdCard }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">入住时间：</div>
-                  <div class="content">{{ detailBook.orderTime }}</div>
+                  <div class="content">{{ detailInfo.orderTime }}</div>
                 </div>
                 <div class="info-wrapper">
                   <div class="name">预退房时间：</div>
-                  <div class="content">{{ detailBook.expectedCheckout }}</div>
+                  <div class="content">{{ detailInfo.expectedCheckout }}</div>
                 </div>
               </div>
               <div class="kind-infos">
                 <div class="info-wrapper">
                   <div class="name">费用：</div>
-                  <div class="content">{{ detailBook.totalCost }}</div>
+                  <div class="content">{{ detailInfo.totalCost }}</div>
                 </div>
               </div>
             </span>
@@ -488,16 +482,46 @@ export default {
       centerDialogVisible: false,
       show: false,
       detailBook: {},
+      detailInfo: {},
+      oldPrice: 0,
+      newPrice: 0,
       totalPrice: 0,
       drinkList: [],
+      newRoomList: [],
+      showDetail: false,
     };
   },
   mounted() {
-    console.log(this.roomList);
-    this.getList();
+    // 调房：原则上不允许调房，除非是酒店自身问题
+    // 原则上调房是调整为相同类型的房间
+    // 若需调房，则算差价
+
+    let username = JSON.parse(localStorage.getItem("token")).username;
+    console.log(username);
+    // 获取新房间信息
+    let roomId = this.$route.query.roomId || "";
+    console.log(roomId);
+    if (roomId !== "") {
+      console.log('123')
+      this.$http.adjustBook({
+        username: username,
+        roomId: roomId,
+      });
+      // .then((res) => {
+      //   console.log(res);
+      //   res = JSON.parse(res);
+      //   if (res.code != 0) {
+      //     this.getList();
+      //   }
+      // });
+    }
+
+    // this.getList();
+    // 获取原房间信息
+    this.getOldList();
   },
   methods: {
-    getList() {
+    getOldList() {
       let username = JSON.parse(localStorage.getItem("token")).username;
       console.log(username);
       this.$http
@@ -508,7 +532,7 @@ export default {
           console.log(res);
           res = JSON.parse(res);
           if (res.code != 0) {
-            this.totalPrice = 0;
+            this.oldPrice = 0;
             for (let i = 0; i < res.data.length; i++) {
               if (res.data[i].drinkings.length === 0) {
                 res.data[i].drinkings = "无";
@@ -522,25 +546,60 @@ export default {
               }
               res.data[i].totalCost =
                 res.data[i].actualCost + res.data[i].drinkingsCost;
-              this.totalPrice =
-                this.totalPrice +
+              this.oldPrice =
+                this.oldPrice +
                 res.data[i].totalCost -
                 res.data[i].orderInfo.totalCost;
             }
             // 还需支付
-            this.totalPrice = this.totalPrice * 100;
+            this.oldPrice = this.oldPrice * 100;
+            console.log(this.oldPrice);
             this.roomList = res.data;
             this.detailBook = res.data[0];
             console.log(this.roomList);
           } else {
             this.roomList = [];
           }
+          this.getList();
         });
     },
-    handleCancel(info) {
+    getList() {
+      let username = JSON.parse(localStorage.getItem("token")).username;
+      console.log(username);
+      this.$http
+        .getBookList({
+          addUser: username,
+        })
+        .then((res) => {
+          console.log(res);
+          res = JSON.parse(res);
+          if (res.data.length != 0) {
+            let newPrice = 0;
+            for (let i = 0; i < res.data.length; i++) {
+              res.data[i].remark =
+                res.data[i].remark === "" ? "无" : res.data[i].remark;
+              res.data[i].roomInfo.drinkings = res.data[
+                i
+              ].roomInfo.drinkings.join(" 、");
+              newPrice = newPrice + Number(res.data[i].totalCost);
+            }
+            this.newRoomList = res.data;
+            this.detailInfo = res.data[0];
+            this.newPrice = newPrice * 100;
+            console.log(this.newPrice);
+            console.log(this.newRoomList);
+          } else {
+            this.newRoomList = [];
+          }
+          this.totalPrice = this.oldPrice + this.newPrice;
+          console.log(this.totalPrice);
+        });
+    },
+    handleDel(info) {
       console.log(info);
       this.$http
-        .cancelCheckOut({
+        .cancelBook({
+          roomId: info.roomId,
           orderId: info.orderId,
         })
         .then((res) => {
@@ -554,6 +613,7 @@ export default {
             });
             return;
           }
+          this.newPrice = this.newPrice - info.totalCost * 100
           this.getList();
           this.$message({
             showClose: true,
@@ -615,6 +675,21 @@ export default {
       this.detailBook = info;
       this.centerDialogVisible = true;
     },
+    handleNewView(info) {
+      console.log(info);
+      this.detailInfo = info;
+      this.showDetail = true;
+      console.log(this.detailInfo, this.showDetail);
+    },
+    updateBookInfo() {
+      console.log(this.detailBook.orderId);
+      this.$router.push({
+        path: "/updatedBook",
+        query: {
+          orderId: this.detailInfo.orderId,
+        },
+      });
+    },
     handleChange(value, index) {
       console.log(value, index);
       this.drinkList[index].count = value;
@@ -653,7 +728,7 @@ export default {
             });
             return;
           }
-          this.getList();
+          this.getOldList();
           this.$message({
             showClose: true,
             message: res.msg,
@@ -663,7 +738,7 @@ export default {
         });
     }),
     onSubmit: tool.throttle(function () {
-      console.log(this.roomList);
+      console.log(this.roomList, this.newRoomList);
       let orderList = [];
       for (let i = 0; i < this.roomList.length; i++) {
         orderList.push({
@@ -672,11 +747,18 @@ export default {
           totalCost: this.roomList[i].totalCost,
         });
       }
-      console.log(orderList);
+
+      let newList = []
+      for (let i = 0; i < this.newRoomList.length; i++) {
+        newList.push(this.newRoomList[i].orderId)
+      }
+
+      console.log(orderList, newList);
 
       this.$http
-        .checkedOut({
+        .adjustCheckedOut({
           orderList: orderList,
+          newList: newList
         })
         .then((res) => {
           console.log(res);
@@ -690,7 +772,10 @@ export default {
             return;
           }
           // 结算成功
-          this.getList();
+          this.getOldList();
+          this.totalPrice = 0
+          this.oldPrice = 0
+          this.newPrice = 0
           this.$message({
             showClose: true,
             message: res.msg,

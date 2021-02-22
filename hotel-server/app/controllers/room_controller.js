@@ -620,10 +620,13 @@ const updatedBookInfo = async (ctx) => {
   console.log(ctx.request.body)
   let req = ctx.request.body
 
+  let currentTime = formatTime.getNowTime()
+  console.log(currentTime)
+
   let expectedCheckout = formatTime.getBookTime(req.expectedCheckout)
   console.log(expectedCheckout)
 
-  let days = formatTime.getDays(req.orderTime, expectedCheckout)
+  let days = formatTime.getDays(currentTime, expectedCheckout)
   console.log(days)
 
   let totalCost = req.price * days + 100
@@ -1050,6 +1053,380 @@ const checkedOut = async (ctx) => {
   }
 }
 
+const adjustBook = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let findOrder = await book_col.findOne({
+    roomId: req.roomId
+  })
+  console.log(findOrder)
+
+  if (findOrder) {
+    ctx.body = {
+      code: 0,
+      msg: '订单已存在'
+    }
+    return
+  }
+
+  // 获取原房间订单信息
+  let checkInfo = await checkOut_col.findOne({
+    checkOutUser: req.username
+  })
+  console.log(checkInfo)
+  
+  let oldInfo = await order_col.findOne({
+    orderId: checkInfo.orderId
+  })
+  console.log(oldInfo)
+
+  // 获取房价信息
+  let roomInfo = await roomDetail_col.findOne({
+    roomId: req.roomId
+  })
+  console.log(roomInfo)
+
+  // 新房间订单信息
+  let newOrderId = uuidv1()
+  console.log(newOrderId)
+  let currentTime = formatTime.getNowTime()
+  console.log(currentTime)
+  // 距离退房相差的时间天数
+  let days = formatTime.getDays(currentTime, oldInfo.expectedCheckout)
+  console.log(days)
+  // 预退房时间
+  let expectedCheckout = formatTime.getAfterDays(days)
+  console.log(expectedCheckout)
+
+  let totalCost = roomInfo.price * days + 100 // 单价 * 天数 + 押金
+  console.log(totalCost)
+
+  let result = await book_col.create({
+    orderId: newOrderId,
+    roomId: req.roomId,
+    order1Name: oldInfo.order1Name,
+    order1Sex: oldInfo.order1Sex,
+    order1IdCard: oldInfo.order1IdCard,
+    order2Name: oldInfo.order2Name,
+    order2Sex: oldInfo.order2Sex,
+    order2IdCard: oldInfo.order2IdCard,
+    order3Name: oldInfo.order3Name,
+    order3Sex: oldInfo.order3Sex,
+    order3IdCard: oldInfo.order3IdCard,
+    order4Name: oldInfo.order4Name,
+    order4Sex: oldInfo.order4Sex,
+    order4IdCard: oldInfo.order4IdCard,
+    orderTime: currentTime,
+    expectedCheckout: expectedCheckout,
+    totalCost: totalCost,
+    addUser: req.username,
+    remark: ''
+  })
+
+  if (result) {
+    let updated = await roomDetail_col.updateOne({
+      roomId: req.roomId
+    }, {
+      region: '有客'
+    })
+    console.log(updated)
+    if (updated.ok == 1) {
+      ctx.body = {
+        code: 1,
+        msg: '订单生成成功'
+      }
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '订单生成失败'
+      }
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '生成失败'
+    }
+  }
+}
+
+const adjustCheckedOut = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+
+  let currentTime = formatTime.getNowTime()
+  console.log(currentTime)
+
+  // 获取订单信息 order checkOut
+  // 将信息存入历史记录中 historyOrder
+  // 将客房状态改变 roomDetail
+  // 移除订单 order checkOut
+
+  // 将新的房间的订单写入 order 
+  // 移除订单 book
+
+  for (let i = 0; i < req.orderList.length; i++) {
+    console.log(req.orderList[i])
+    let orderInfo = await order_col.findOne({
+      orderId: req.orderList[i].orderId
+    })
+    console.log(orderInfo)
+    let checkInfo = await checkOut_col.findOne({
+      orderId: req.orderList[i].orderId
+    })
+    console.log(checkInfo)
+
+    let addInfo = await historyOrder_col.create({
+      orderId: req.orderList[i].orderId,
+      roomId: orderInfo.roomId,
+      order1Name: orderInfo.order1Name,
+      order1Sex: orderInfo.order1Sex,
+      order1IdCard: orderInfo.order1IdCard,
+      order2Name: orderInfo.order2Name,
+      order2Sex: orderInfo.order2Sex,
+      order2IdCard: orderInfo.order2IdCard,
+      order3Name: orderInfo.order3Name,
+      order3Sex: orderInfo.order3Sex,
+      order3IdCard: orderInfo.order3IdCard,
+      order4Name: orderInfo.order4Name,
+      order4Sex: orderInfo.order4Sex,
+      order4IdCard: orderInfo.order4IdCard,
+      orderTime: orderInfo.orderTime,
+      expectedCheckout: orderInfo.expectedCheckout,
+      checkOutTime: currentTime,
+      totalCost: Number(req.orderList[i].totalCost),
+      actualCost: Number(req.orderList[i].actualCost),
+      prevCost: orderInfo.totalCost,
+      addUser: orderInfo.addUser,
+      drinkings: checkInfo.drinkings,
+      drinkingsCost: checkInfo.drinkingsCost,
+      checkOutUser: checkInfo.checkOutUser,
+      remark: checkInfo.remark
+    })
+    if (addInfo) {
+      // 改变客房状态
+      let changed = await roomDetail_col.updateOne({
+        roomId: orderInfo.roomId
+      }, {
+        region: '清理中'
+      })
+      console.log(changed)
+      if (changed.nModified == 1) {
+        let removedOrder = await order_col.remove({
+          orderId: req.orderList[i].orderId
+        })
+        console.log(removedOrder)
+        let removedCheck = await checkOut_col.remove({
+          orderId: req.orderList[i].orderId
+        })
+        console.log(removedCheck)
+        if (removedCheck.deletedCount == 0 && removedOrder.deletedCount == 0) {
+        //   ctx.body = {
+        //     code: 1,
+        //     msg: '结算成功'
+        //   }
+        // } else {
+          ctx.body = {
+            code: 0,
+            msg: '结算失败'
+          }
+          return
+        }
+      } else {
+        ctx.body = {
+          code: 0,
+          msg: '结算失败'
+        }
+        return
+      }
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '结算失败'
+      }
+      return
+    }
+  }
+
+  for (let i = 0; i < req.newList.length; i++) {
+    console.log(req.newList[i])
+    // 查找订单信息
+    let info = await book_col.findOne({
+      orderId: req.newList[i]
+    })
+    console.log(info)
+    // 再将订单信息存入order表中
+    if (info) {
+      let add = await order_col.create({
+        orderId: info.orderId,
+        roomId: info.roomId,
+        order1Name: info.order1Name,
+        order1Sex: info.order1Sex,
+        order1IdCard: info.order1IdCard,
+        order2Name: info.order2Name,
+        order2Sex: info.order2Sex,
+        order2IdCard: info.order2IdCard,
+        order3Name: info.order3Name,
+        order3Sex: info.order3Sex,
+        order3IdCard: info.order3IdCard,
+        order4Name: info.order4Name,
+        order4Sex: info.order4Sex,
+        order4IdCard: info.order4IdCard,
+        orderTime: info.orderTime,
+        expectedCheckout: info.expectedCheckout,
+        totalCost: info.totalCost,
+        addUser: info.addUser,
+        remark: info.remark
+      })
+      console.log(add)
+      if (add) {
+        // 移除book表中的订单信息
+        let removed = await book_col.remove({
+          orderId: req.newList[i]
+        })
+        console.log(removed)
+        if (removed.ok == 1) {
+          ctx.body = {
+            code: 1,
+            msg: '结算成功'
+          }
+        } else {
+          ctx.body = {
+            code: 0,
+            msg: '结算失败'
+          }
+          return
+        }
+      } else {
+        ctx.body = {
+          code: 0,
+          msg: '结算失败'
+        }
+        return
+      }
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '结算失败'
+      }
+      return
+    }
+  }
+}
+
+const getHistoricalList = async (ctx) => {
+  let result = await historyOrder_col.find({}).lean()
+  console.log(result)
+  if (result) {
+    for (let i = 0; i < result.length; i++) {
+      let roomInfo = await roomDetail_col.findOne({
+        roomId: result[i].roomId
+      })
+      result[i].roomInfo = roomInfo
+    }
+    console.log(result)
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: result
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '暂无订单'
+    }
+  }
+}
+
+const searchHistoryList = async (ctx) => {
+  let req = ctx.request.body
+  if (req.time !== '') {
+    req.time = formatTime.getSearchTime(req.time)
+  }
+  console.log(req)
+
+  // 复杂条件查询 or
+  let result = await historyOrder_col.find({
+    $or: [{
+      order1Name: {
+        $regex: '.*' + req.ordername,
+        $options: 'i'
+      }
+    }, {
+      order2Name: {
+        $regex: '.*' + req.ordername,
+        $options: 'i'
+      }
+    }, {
+      order3Name: {
+        $regex: '.*' + req.ordername,
+        $options: 'i'
+      }
+    }, {
+      order4Name: {
+        $regex: '.*' + req.ordername,
+        $options: 'i'
+      }
+    }], 
+    $or: [{
+      orderTime: {
+        $regex: '.*' + req.time,
+        $options: 'i'
+      }
+    }, {
+      checkOutTime: {
+        $regex: '.*' + req.time,
+        $options: 'i'
+      }
+    }]
+  }).lean()
+  console.log('result:', result)
+
+  if (result) {
+    let list = []
+    for (let i = 0; i < result.length; i++) {
+      let roomInfo = await roomDetail_col.findOne({
+        roomId: result[i].roomId,
+        num: {
+          $regex: '.*' + req.num,
+          $options: 'i'
+        },
+        name: {
+          $regex: '.*' + req.name,
+          $options: 'i'
+        },
+        kind: {
+          $regex: '.*' + req.kind,
+          $options: 'i'
+        },
+      })
+      console.log(roomInfo)
+      if (roomInfo !== null) {
+        result[i].roomInfo = roomInfo
+        list.push(result[i])
+      }
+    }
+    console.log(list)
+    if (list.length == 0) {
+      ctx.body = {
+        code: 0,
+        msg: '暂无订单'
+      }
+      return
+    }
+    ctx.body = {
+      code: 1,
+      msg: '获取成功',
+      data: list
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '暂无订单'
+    }
+  }
+}
+
 module.exports = {
   addRoomKind,
   getRoomKind,
@@ -1076,5 +1453,9 @@ module.exports = {
   getCheckOutList,
   cancelCheckOut,
   updateCheckInfo,
-  checkedOut
+  checkedOut,
+  adjustBook,
+  adjustCheckedOut,
+  getHistoricalList,
+  searchHistoryList
 }

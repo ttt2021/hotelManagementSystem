@@ -204,6 +204,38 @@ const checkedOut = (data) => {
 	})
 }
 
+const adjustBook = (data) => {
+	return axios({
+		url: '/adjustBook',
+		method: 'post',
+		data
+	})
+}
+
+const adjustCheckedOut = (data) => {
+	return axios({
+		url: '/adjustCheckedOut',
+		method: 'post',
+		data
+	})
+}
+
+const getHistoricalList = (data) => {
+	return axios({
+		url: '/getHistoricalList',
+		method: 'post',
+		data
+	})
+}
+
+const searchHistoryList = (data) => {
+	return axios({
+		url: '/searchHistoryList',
+		method: 'post',
+		data
+	})
+}
+
 export default {
   addRoomKind,
 	getRoomKind,
@@ -230,5 +262,9 @@ export default {
 	getCheckOutList,
 	cancelCheckOut,
 	updateCheckInfo,
-	checkedOut
+	checkedOut,
+	adjustBook,
+	adjustCheckedOut,
+	getHistoricalList,
+	searchHistoryList
 }

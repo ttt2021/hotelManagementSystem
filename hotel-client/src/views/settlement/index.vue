@@ -23,7 +23,7 @@
             prop="roomInfo.kind"
             label="房间类型"
           ></el-table-column>
-          <el-table-column prop="roomInfo.price" label="单价" width="50px"></el-table-column>
+          <el-table-column prop="roomInfo.price" label="单价"></el-table-column>
           <el-table-column prop="order1Name" label="入住人1"></el-table-column>
           <el-table-column prop="order2Name" label="入住人2"></el-table-column>
           <el-table-column prop="order3Name" label="入住人3"></el-table-column>

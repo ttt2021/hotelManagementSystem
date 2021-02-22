@@ -26,7 +26,7 @@
           <i class="el-icon-key"></i>
           <span slot="title">首页</span>
         </el-menu-item>
-        <el-submenu index="2">
+        <el-submenu index="2" v-if="auth == 5">
           <template slot="title">
             <i class="iconfont icon-guanli"></i>
             <span slot="title">开退房管理</span>
@@ -56,7 +56,7 @@
             <span slot="title">退房功能</span>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="/orderManagement" class="firstMenu">
+        <el-menu-item index="/orderManagement" class="firstMenu" v-if="auth == 5">
           <i class="iconfont icon-guanli1"></i>
           <span slot="title">订单管理</span>
         </el-menu-item>
@@ -82,7 +82,7 @@
           <i class="iconfont icon-user-cog"></i>
           <span slot="title">职员信息查询</span>
         </el-menu-item>
-        <el-submenu index="4">
+        <el-submenu index="4" v-if="auth == 4 || auth == 1">
           <template slot="title">
             <i class="iconfont icon-introduction"></i>
             <span slot="title">酒店介绍</span>
@@ -91,11 +91,15 @@
             <i class="iconfont icon-gaikuang"></i>
             <span slot="title">酒店概况</span>
           </el-menu-item>
-          <el-menu-item index="/home/updateHotelInfo" v-if="auth == 4 || auth == 1">
+          <el-menu-item index="/home/updateHotelInfo">
             <i class="el-icon-edit"></i>
             <span slot="title">修改酒店信息</span>
           </el-menu-item>
         </el-submenu>
+        <el-menu-item index="/home/hotelInfo" class="firstMenu" v-if="auth == 2 || auth == 3 || auth > 4">
+          <i class="iconfont icon-gaikuang"></i>
+          <span slot="title">酒店概况</span>
+        </el-menu-item>
         <el-submenu index="5" v-if="auth == 3 || auth == 1">
           <template slot="title">
             <i class="iconfont icon-peopleInfo"></i>
@@ -132,7 +136,19 @@
             <span slot="title">客房酒水</span>
           </el-menu-item>
         </el-submenu>
-        <el-submenu index="7">
+        <el-menu-item index="/checkIn" class="firstMenu" v-if="auth == 2 || auth == 1 || auth == 6">
+          <i class="iconfont icon-ruzhuguanli"></i>
+          <span slot="title">入住信息管理</span>
+        </el-menu-item>
+        <el-menu-item index="/statistics" class="firstMenu">
+          <i class="iconfont icon-lishi"></i>
+          <span slot="title">收入统计汇总</span>
+        </el-menu-item>
+        <el-menu-item index="/historicalOrder" class="firstMenu">
+          <i class="iconfont icon-lishi"></i>
+          <span slot="title">历史订单管理</span>
+        </el-menu-item>
+        <el-submenu index="8">
           <template slot="title">
             <i class="el-icon-user"></i>
             <span slot="title">个人中心</span>

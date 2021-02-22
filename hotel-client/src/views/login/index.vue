@@ -201,12 +201,13 @@ export default {
           res = JSON.parse(res);
 
           // 账号不存在情况下
-          if (res.code === 0) {
+          if (res.code == 0) {
             this.$toast.fail(res.msg);
             this.pwd = "";
             this.workNum = "";
             this.verify = "";
             this.$refs.verifyRef.handleDraw();
+            return
           }
 
           // 账号密码均匹配
