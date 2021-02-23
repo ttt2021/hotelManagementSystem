@@ -27,10 +27,14 @@ const routes = [
     },
     component: () => import('@/views/home/index.vue'),
     children: [
-      // {
-      //   path:'/home',
-      //   redirect: '/home/community'
-      // },
+      {
+        path: '/home',
+        name: 'adminHome',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/components/adminHome.vue')
+      },
       {
         path: '/home/userInfo',
         name: 'userInfo',

@@ -4,7 +4,9 @@
       <Aside></Aside>
       <el-container>
         <Header :userinfo.sync="userinfo"></Header>
-        <el-main><router-view></router-view></el-main>
+        <el-main>
+          <router-view></router-view>
+        </el-main>
         <el-footer style="height: 0px"></el-footer>
       </el-container>
     </el-container>
@@ -14,10 +16,12 @@
 <script>
 import Header from "../../components/header.vue";
 import Aside from "../../components/aside.vue";
+import adminHome from "../../components/adminHome.vue";
 export default {
   components: {
     Header,
     Aside,
+    adminHome
   },
   data() {
     return {
@@ -31,7 +35,6 @@ export default {
     if (token !== null) {
       let userinfo = JSON.parse(token);
       this.auth = userinfo.auth;
-      // userinfo.avatar = userinfo.avatar === '' ? '../assets/top.jpg' : userinfo.avatar
       this.userinfo = userinfo;
     }
     console.log(this.userinfo);

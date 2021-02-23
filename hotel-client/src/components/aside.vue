@@ -140,11 +140,11 @@
           <i class="iconfont icon-ruzhuguanli"></i>
           <span slot="title">入住信息管理</span>
         </el-menu-item>
-        <el-menu-item index="/statistics" class="firstMenu">
+        <el-menu-item index="/statistics" class="firstMenu" v-if="auth == 1 || auth == 6">
           <i class="iconfont icon-lishi"></i>
           <span slot="title">收入统计汇总</span>
         </el-menu-item>
-        <el-menu-item index="/historicalOrder" class="firstMenu">
+        <el-menu-item index="/historicalOrder" class="firstMenu" v-if="auth == 2 || auth == 1 || auth == 6">
           <i class="iconfont icon-lishi"></i>
           <span slot="title">历史订单管理</span>
         </el-menu-item>

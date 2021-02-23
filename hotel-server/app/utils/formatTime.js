@@ -109,6 +109,15 @@ const getSearchTime = (time) => {
   return currentDate
 }
 
+const getDiffTime = (date1, date2) => {
+  const start = new Date(date1)
+  const end = new Date(date2)
+  let diffTime = end.getTime() - start.getTime()
+  let leave = diffTime % (24 * 3600 * 1000)
+  let hours = Math.ceil(leave / (3600 * 1000))
+  return hours
+}
+
 module.exports = {
   getTime,
   getDiffYear,
@@ -116,5 +125,6 @@ module.exports = {
   getBookTime,
   getDays,
   getAfterDays,
-  getSearchTime
+  getSearchTime,
+  getDiffTime
 }

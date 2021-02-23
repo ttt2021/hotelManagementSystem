@@ -1315,7 +1315,9 @@ const adjustCheckedOut = async (ctx) => {
 }
 
 const getHistoricalList = async (ctx) => {
-  let result = await historyOrder_col.find({}).lean()
+  let result = await historyOrder_col.find({}).sort({
+    checkOutTime: -1
+  }).lean()
   console.log(result)
   if (result) {
     for (let i = 0; i < result.length; i++) {
