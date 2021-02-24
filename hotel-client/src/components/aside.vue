@@ -144,10 +144,24 @@
           <i class="iconfont icon-lishi"></i>
           <span slot="title">收入统计汇总</span>
         </el-menu-item>
-        <el-menu-item index="/historicalOrder" class="firstMenu" v-if="auth == 2 || auth == 1 || auth == 6">
+        <el-menu-item index="/historicalOrder" class="firstMenu" v-if="auth == 2 || auth == 1 || auth == 6 || auth == 5">
           <i class="iconfont icon-lishi"></i>
           <span slot="title">历史订单管理</span>
         </el-menu-item>
+        <el-menu-item index="/logManagement" class="firstMenu" v-if="auth == 1">
+          <i class="iconfont icon-rizhi"></i>
+          <span slot="title">日志管理</span>
+        </el-menu-item>
+        <el-submenu index="7" >
+          <template slot="title">
+            <i class="iconfont icon-guanli"></i>
+            <span slot="title">资讯管理</span>
+          </template>
+          <el-menu-item index="/writeArticle">
+            <i class="iconfont icon-dingfang"></i>
+            <span slot="title">写资讯</span>
+          </el-menu-item>
+        </el-submenu>
         <el-submenu index="8">
           <template slot="title">
             <i class="el-icon-user"></i>

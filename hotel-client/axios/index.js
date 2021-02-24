@@ -9,6 +9,8 @@ import apiHotel from './interface/hotel';
 import apiRoom from './interface/room';
 import apiDrink from './interface/drink';
 import apiStatistics from './interface/statistics';
+import apiInfos from './interface/infos';
+import apiLog from './interface/log';
 
 const install = Vue => {
 	if (install.installed) {
@@ -31,7 +33,9 @@ const install = Vue => {
 					apiHotel,
 					apiRoom,
 					apiDrink,
-					apiStatistics
+					apiStatistics,
+					apiInfos,
+					apiLog
 				)
 			}
 		}

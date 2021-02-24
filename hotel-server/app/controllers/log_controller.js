@@ -18,6 +18,66 @@ const addLog = async (ctx) => {
   return addlog
 }
 
+const getHomeLogList = async (ctx) => {
+  let logList = await log_col.find().sort({
+    _id: -1
+  }).limit(18)
+  console.log(logList)
+
+  ctx.body = {
+    data: logList
+  }
+}
+
+const getLogList = async (ctx) => {
+  let logList = await log_col.find().sort({
+    _id: -1
+  })
+  console.log(logList)
+
+  ctx.body = {
+    data: logList
+  }
+}
+
+const searchLogList = async (ctx) => {
+  console.log(ctx.request.body)
+  let req = ctx.request.body
+  if (req.logTime !== '') {
+    req.logTime = formatTime.getSearchTime(req.logTime)
+  }
+  console.log(req)
+
+  // 模糊查询
+  let searchList = await log_col.find({
+    username: {
+      $regex: '.*' + req.username,
+      $options: 'i'
+    },
+    logTime: {
+      $regex: '.*' + req.logTime,
+      $options: 'i'
+    }
+  })
+  console.log(searchList)
+  if (searchList.length !== 0) {
+    ctx.body = {
+      code: 1,
+      msg: '查询成功',
+      data: searchList
+    }
+  } else {
+    ctx.body = {
+      code: 0,
+      msg: '查无此房间',
+      data: searchList
+    }
+  }
+}
+
 module.exports = {
-  addLog
+  addLog,
+  getHomeLogList,
+  getLogList,
+  searchLogList
 }

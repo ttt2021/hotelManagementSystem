@@ -95,8 +95,8 @@
             <span v-html="scope.row.checkOutTime"></span>
           </template>
         </el-table-column>
-        <el-table-column prop="totalCost" label="总费用" v-if="auth == 1 || auth == 6"></el-table-column>
-        <el-table-column label="操作" v-if="auth == 1 || auth == 6">
+        <el-table-column prop="totalCost" label="总费用" v-if="auth == 1 || auth == 6 || auth == 5"></el-table-column>
+        <el-table-column label="操作" v-if="auth == 1 || auth == 6 || auth == 5">
           <template slot-scope="scope">
             <el-button
               size="mini"

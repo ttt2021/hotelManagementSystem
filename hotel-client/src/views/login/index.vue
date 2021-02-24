@@ -3,13 +3,15 @@
     <div class="slanty-top">
       <img class="bg-img" src="@/assets/top.jpg" />
       <div class="welcome">
-      <div class="hotel-title">暖
-        <div class="like-logo">
-          <img class="like" src="@/assets/like.png" />
-        </div>居家酒店
+        <div class="hotel-title">
+          暖
+          <div class="like-logo">
+            <img class="like" src="@/assets/like.png" />
+          </div>
+          居家酒店
+        </div>
+        <div class="come">欢迎您</div>
       </div>
-      <div class="come">欢迎您</div>
-    </div>
     </div>
     <!-- <div class="like-logo">
       <img class="like" src="@/assets/like.png" />
@@ -207,6 +209,16 @@ export default {
             this.workNum = "";
             this.verify = "";
             this.$refs.verifyRef.handleDraw();
+            return;
+          }
+
+          if (res.data.auth == 7) {
+            this.$toast.clear();
+            this.$message({
+              showClose: true,
+              message: "您无权限登录本系统",
+              type: "error",
+            });
             return
           }
 
@@ -234,7 +246,9 @@ export default {
           // 临时存储在本地，关闭系统时移除
           localStorage.setItem("token", JSON.stringify(res.data));
           // 获取路由携带的参数，若无则跳到首页
-          let redirect = decodeURIComponent(this.$route.query.redirect || '/home')
+          let redirect = decodeURIComponent(
+            this.$route.query.redirect || "/home"
+          );
           // 路由跳转
           this.$router.push(redirect);
         })
@@ -322,7 +336,7 @@ export default {
 .hotel-title {
   display: flex;
   align-items: center;
-  font-family: '楷体';
+  font-family: "楷体";
   font-size: 48px;
   color: #ff0592;
 }
@@ -330,7 +344,7 @@ export default {
 .come {
   margin-left: 10px;
   font-size: 28px;
-  font-family: '楷体';
+  font-family: "楷体";
   color: #ee00ee;
   margin-top: 15px;
 }

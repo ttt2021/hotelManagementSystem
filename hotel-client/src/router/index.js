@@ -234,6 +234,22 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views//statistics/index.vue')
+      },
+      {
+        path: '/logManagement',
+        name: '/logManagement',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/logManagement/index.vue')
+      },
+      {
+        path: '/writeArticle',
+        name: '/writeArticle',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/writeArticle/index.vue')
       }
     ]
   },

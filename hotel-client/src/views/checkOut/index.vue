@@ -473,6 +473,7 @@ export default {
           }
           // 结算成功
           this.getList();
+          this.totalPrice = 0
           this.$message({
             showClose: true,
             message: res.msg,
