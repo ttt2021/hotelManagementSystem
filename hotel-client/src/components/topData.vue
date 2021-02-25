@@ -235,7 +235,7 @@
             </div>
             <div class="infos-wrapper">
               <div class="totalInfo-wrapper">
-                <div class="count">0</div>
+                <div class="count">{{ totalArticle }}</div>
                 <div class="title">资讯篇数</div>
               </div>
             </div>
@@ -251,8 +251,8 @@
             </div>
             <div class="infos-wrapper">
               <div class="totalInfo-wrapper">
-                <div class="count">0</div>
-                <div class="title">评论总数</div>
+                <div class="count">{{ totalViews }}</div>
+                <div class="title">浏览总数</div>
               </div>
             </div>
           </div>
@@ -277,10 +277,12 @@ export default {
       totalPrice: 0,
       addPrice: 0,
       restRoom: 0,
-      lastLogin: '',
+      lastLogin: "",
       todayPrice: 0,
       totalPeople: 0,
-      loginCount: 0
+      loginCount: 0,
+      totalViews: 0,
+      totalArticle: 0,
     };
   },
   mounted() {
@@ -292,26 +294,30 @@ export default {
   methods: {
     getInfo() {
       let username = JSON.parse(localStorage.getItem("token")).username;
-      console.log(username)
-      this.$http.getDataInfo({
-        username: username
-      }).then((res) => {
-        res = JSON.parse(res).data;
-        console.log(res);
-        this.totalUser = res.totalUser;
-        this.addUser = res.addUser;
-        this.totalRoom = res.totalRoom;
-        this.addRoom = res.addRoom;
-        this.totalOrder = res.totalOrder;
-        this.addOrder = res.addOrder;
-        this.totalPrice = res.totalPrice;
-        this.addPrice = res.addPrice;
-        this.todayPrice = res.todayPrice
-        this.restRoom = res.restRoom;
-        this.lastLogin = res.lastLogin
-        this.totalPeople = res.totalPeople
-        this.loginCount = res.loginCount
-      });
+      console.log(username);
+      this.$http
+        .getDataInfo({
+          username: username,
+        })
+        .then((res) => {
+          res = JSON.parse(res).data;
+          console.log(res);
+          this.totalUser = res.totalUser;
+          this.addUser = res.addUser;
+          this.totalRoom = res.totalRoom;
+          this.addRoom = res.addRoom;
+          this.totalOrder = res.totalOrder;
+          this.addOrder = res.addOrder;
+          this.totalPrice = res.totalPrice;
+          this.addPrice = res.addPrice;
+          this.todayPrice = res.todayPrice;
+          this.restRoom = res.restRoom;
+          this.lastLogin = res.lastLogin;
+          this.totalPeople = res.totalPeople;
+          this.loginCount = res.loginCount;
+          this.totalViews = res.totalViews;
+          this.totalArticle = res.totalArticle;
+        });
     },
   },
 };

@@ -3,6 +3,7 @@ const user_col = require('../models/user')
 const order_col = require('../models/order')
 const room_col = require('../models/room')
 const hotel_col = require('../models/hotel')
+const article_col = require('../models/article')
 const historyOrder_col = require('../models/historyOrder')
 const roomDetail_col = require('../models/roomDetail')
 const formatTime = require('../utils/formatTime')
@@ -109,6 +110,18 @@ const getDataInfo = async (ctx) => {
   let loginCount = lastLoginList.length
   console.log(loginCount)
 
+  // 获取资讯篇数
+  let articleList = await article_col.find({
+    status: '已发表'
+  })
+  let totalArticle = articleList.length
+  console.log(totalArticle)
+  let totalViews = 0
+  for (let i = 0; i < articleList.length; i++) {
+    totalViews = totalViews + Number(articleList[i].viewCount)
+  }
+  console.log(totalViews)
+
   ctx.body = {
     data: {
       totalUser: totalUser,
@@ -123,7 +136,9 @@ const getDataInfo = async (ctx) => {
       restRoom: restRoom,
       lastLogin: lastLogin,
       totalPeople: totalPeople,
-      loginCount: loginCount
+      loginCount: loginCount,
+      totalArticle: totalArticle,
+      totalViews: totalViews
     }
   }
 }

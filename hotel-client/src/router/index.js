@@ -250,6 +250,30 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views/writeArticle/index.vue')
+      },
+      {
+        path: '/articleList',
+        name: '/articleList',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/articleList/index.vue')
+      },
+      {
+        path: '/articleDetail',
+        name: '/articleDetail',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/articleDetail/index.vue')
+      },
+      {
+        path: '/checkArticle',
+        name: '/checkArticle',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/checkArticle/index.vue')
       }
     ]
   },

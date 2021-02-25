@@ -158,8 +158,16 @@
             <span slot="title">资讯管理</span>
           </template>
           <el-menu-item index="/writeArticle">
-            <i class="iconfont icon-dingfang"></i>
+            <i class="iconfont icon-updatedBook"></i>
             <span slot="title">写资讯</span>
+          </el-menu-item>
+          <el-menu-item index="/articleList">
+            <i class="iconfont icon-zixun"></i>
+            <span slot="title">资讯列表</span>
+          </el-menu-item>
+          <el-menu-item index="/checkArticle">
+            <i class="iconfont icon-zixun1"></i>
+            <span slot="title">审核资讯</span>
           </el-menu-item>
         </el-submenu>
         <el-submenu index="8">

@@ -11,6 +11,9 @@ import apiDrink from './interface/drink';
 import apiStatistics from './interface/statistics';
 import apiInfos from './interface/infos';
 import apiLog from './interface/log';
+import apiArticle from './interface/article';
+import apiComment from './interface/comment';
+import apiResponse from './interface/response';
 
 const install = Vue => {
 	if (install.installed) {
@@ -35,7 +38,10 @@ const install = Vue => {
 					apiDrink,
 					apiStatistics,
 					apiInfos,
-					apiLog
+					apiLog,
+					apiArticle,
+					apiComment,
+					apiResponse
 				)
 			}
 		}

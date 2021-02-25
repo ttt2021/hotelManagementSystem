@@ -13,6 +13,13 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import VCharts from 'v-charts'
 
+import VueQuillEditor from 'vue-quill-editor'
+
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+Vue.use(VueQuillEditor)
+
 Vue.use(VCharts)
 Vue.use(Vant);
 Vue.use(ElementUI);
