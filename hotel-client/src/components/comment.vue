@@ -30,8 +30,27 @@
           </div>
           <div class="time-wrapper">
             <div class="time">{{ item.time }}</div>
-            <div class="operation" @click="handleDel(item)">删除</div>
-            <div class="resever" @click="handleResponse(item)">回复</div>
+            <div
+              class="operation"
+              @click="handleDel(item)"
+              v-if="
+                item.name === userinfo.username ||
+                userinfo.auth == 1 ||
+                userinfo.auth == 4 ||
+                userinfo.auth == 7
+              "
+            >
+              删除
+            </div>
+            <div
+              class="resever"
+              @click="handleResponse(item)"
+              v-if="
+                userinfo.auth == 1 || userinfo.auth == 4 || userinfo.auth == 7
+              "
+            >
+              回复
+            </div>
           </div>
         </div>
         <div class="comments-list-item-content" v-html="item.content"></div>
@@ -43,7 +62,18 @@
             </div>
             <div class="time-wrapper">
               <div class="time">{{ item.time }}</div>
-              <div class="operation" @click="handleDeleted(item)">删除</div>
+              <div
+                class="operation"
+                @click="handleDeleted(item)"
+                v-if="
+                  item.name === userinfo.username ||
+                  userinfo.auth == 1 ||
+                  userinfo.auth == 4 ||
+                  userinfo.auth == 7
+                "
+              >
+                删除
+              </div>
             </div>
           </div>
           <div class="comments-list-item-content" v-html="item.content"></div>
@@ -89,12 +119,16 @@ export default {
       isShowResEmojiPanel: false,
       commentInfo: {},
       responses: [],
+      username: {},
     };
   },
   components: {
     EmojiPanel,
   },
   mounted() {
+    let userinfo = JSON.parse(localStorage.getItem("token"));
+    console.log(userinfo);
+    this.userinfo = userinfo;
     this.$nextTick(function () {
       this.getList();
     });

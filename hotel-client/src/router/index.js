@@ -274,6 +274,38 @@ const routes = [
           loginRequest: true
         },
         component: () => import('@/views/checkArticle/index.vue')
+      },
+      {
+        path: '/information',
+        name: '/information',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/information/index.vue')
+      },
+      {
+        path: '/comment',
+        name: '/comment',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/comment/index.vue')
+      },
+      {
+        path: '/response',
+        name: '/response',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/response/index.vue')
+      },
+      {
+        path: '/myComment',
+        name: '/myComment',
+        meta: {
+          loginRequest: true
+        },
+        component: () => import('@/views/myComment/index.vue')
       }
     ]
   },

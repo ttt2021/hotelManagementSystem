@@ -121,7 +121,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="6" v-if="auth == 3 || auth == 4">
+      <el-col :span="6" v-if="auth == 3">
         <div class="grid-content bg-purple">
           <div class="data-wrapper">
             <div class="icon-wrapper room sign">
@@ -226,8 +226,23 @@
           </div>
         </div>
       </el-col>
+       <el-col :span="6" v-if="auth == 4 || auth == 8">
+        <div class="grid-content bg-purple">
+          <div class="data-wrapper">
+            <div class="icon-wrapper room sign">
+              <i class="iconfont icon-pinglun"></i>
+            </div>
+            <div class="infos-wrapper">
+              <div class="totalInfo-wrapper">
+                <div class="count">{{ commentCount }}</div>
+                <div class="title">评论次数</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </el-col>
       <!-- 资讯篇数 -->
-      <el-col :span="6" v-if="auth == 4">
+      <el-col :span="6" v-if="auth == 4 || auth == 8">
         <div class="grid-content bg-purple">
           <div class="data-wrapper">
             <div class="icon-wrapper order sign">
@@ -243,7 +258,7 @@
         </div>
       </el-col>
       <!-- 浏览总数 -->
-      <el-col :span="6" v-if="auth == 4">
+      <el-col :span="6" v-if="auth == 4 || auth == 8">
         <div class="grid-content bg-purple">
           <div class="data-wrapper">
             <div class="icon-wrapper salary sign">
@@ -283,6 +298,7 @@ export default {
       loginCount: 0,
       totalViews: 0,
       totalArticle: 0,
+      commentCount: 0
     };
   },
   mounted() {
@@ -317,6 +333,7 @@ export default {
           this.loginCount = res.loginCount;
           this.totalViews = res.totalViews;
           this.totalArticle = res.totalArticle;
+          this.commentCount = res.commentCount
         });
     },
   },

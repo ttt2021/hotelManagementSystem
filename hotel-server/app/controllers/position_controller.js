@@ -27,7 +27,7 @@ const addPosition = async (ctx) => {
   // 获取职位id
   const positionId = uuidv1()
   console.log(positionId)
-  
+
   // 添加职位到数据库中
   const addResult = await position_col.create({
     positionId: positionId,
@@ -55,14 +55,14 @@ const addPosition = async (ctx) => {
 
 // 获取职位列表
 const showPositionInfo = async (ctx) => {
-  let positionList = await position_col.find().sort({"addTime":-1})
+  let positionList = await position_col.find().sort({ "addTime": -1 })
   for (let i = 0; i < positionList.length; i++) {
     const userinfo = await user_col.findOne({
       userId: positionList[i].addUserId
     })
     console.log(userinfo.username)
-    let obj = {addUsername: userinfo.username}
-    positionList[i] = {...positionList[i]._doc, ...obj}
+    let obj = { addUsername: userinfo.username }
+    positionList[i] = { ...positionList[i]._doc, ...obj }
   }
   console.log(positionList)
   if (positionList) {
@@ -97,10 +97,10 @@ const updateStatus = async (ctx) => {
   }
 
   // 不存在员工
-  const updated = await position_col.updateOne({ 
+  const updated = await position_col.updateOne({
     positionId: req.positionId
-  }, { 
-    status: req.status 
+  }, {
+    status: req.status
   })
   console.log(updated)
   if (updated.ok == 1) {
@@ -121,20 +121,32 @@ const updateStatus = async (ctx) => {
 const updatePositionInfo = async (ctx) => {
   console.log(ctx.request.body)
   let req = ctx.request.body
-  const updated = await position_col.updateOne({ 
+  const updated = await position_col.updateOne({
     positionId: req.positionId
-  }, { 
+  }, {
     position: req.position,
     positionDesc: req.positionDesc,
     auth: req.auth
   })
   console.log(updated)
+
   if (updated.ok == 1) {
-    ctx.body = {
-      code: 1,
-      msg: '更新成功'
+    let updatedUser = await user_col.updateMany({
+      job: req.position
+    }, {
+      auth: req.auth
+    })
+    if (updatedUser.ok == 1) {
+      ctx.body = {
+        code: 1,
+        msg: '更新成功'
+      }
+    } else {
+      ctx.body = {
+        code: 0,
+        msg: '更新成功'
+      }
     }
-    return
   } else {
     ctx.body = {
       code: 0,
@@ -169,7 +181,7 @@ const deletePosition = async (ctx) => {
     ctx.body = {
       code: 1,
       msg: '删除成功'
-    } 
+    }
   } else {
     ctx.body = {
       code: 0,

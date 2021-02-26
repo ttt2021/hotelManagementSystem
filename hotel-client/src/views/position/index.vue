@@ -116,7 +116,7 @@ export default {
     return {
       show: false,
       newAuth: 2,
-      columns: [2, 3, 4, 5, 6, 7],
+      columns: [2, 3, 4, 5, 6, 7, 8],
       showPicker: false,
       newPosition: "",
       newPosDesc: "",

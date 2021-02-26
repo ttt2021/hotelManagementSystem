@@ -4,6 +4,8 @@ const order_col = require('../models/order')
 const room_col = require('../models/room')
 const hotel_col = require('../models/hotel')
 const article_col = require('../models/article')
+const comment_col = require('../models/comment')
+const response_col = require('../models/response')
 const historyOrder_col = require('../models/historyOrder')
 const roomDetail_col = require('../models/roomDetail')
 const formatTime = require('../utils/formatTime')
@@ -116,11 +118,17 @@ const getDataInfo = async (ctx) => {
   })
   let totalArticle = articleList.length
   console.log(totalArticle)
-  let totalViews = 0
+  let totalViews = 0 // 浏览次数
   for (let i = 0; i < articleList.length; i++) {
     totalViews = totalViews + Number(articleList[i].viewCount)
   }
   console.log(totalViews)
+
+  let commentCount = 0 // 评论次数
+  let commentList = await comment_col.find()
+  let responseList = await response_col.find()
+  commentCount = commentList.length + responseList.length
+  console.log(commentCount)
 
   ctx.body = {
     data: {
@@ -138,7 +146,8 @@ const getDataInfo = async (ctx) => {
       totalPeople: totalPeople,
       loginCount: loginCount,
       totalArticle: totalArticle,
-      totalViews: totalViews
+      totalViews: totalViews,
+      commentCount: commentCount
     }
   }
 }

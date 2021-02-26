@@ -102,11 +102,6 @@ export default {
                 type: "error",
               });
             } else {
-              // this.$message({
-              //   showClose: true,
-              //   message: res.msg,
-              //   type: "success",
-              // });
               localStorage.removeItem("token");
               this.$router.push({ path: "/login" });
             }

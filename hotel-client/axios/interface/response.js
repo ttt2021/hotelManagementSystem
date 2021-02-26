@@ -16,7 +16,25 @@ const delResponse = (data) => {
 	})
 }
 
+const responsesList = (data) => {
+	return axios({
+		url: '/responsesList',
+		method: 'post',
+		data
+	})
+}
+
+const searchResponse = (data) => {
+	return axios({
+		url: '/searchResponse',
+		method: 'post',
+		data
+	})
+}
+
 export default {
 	getResponse,
-	delResponse
+	delResponse,
+	responsesList,
+	searchResponse
 }

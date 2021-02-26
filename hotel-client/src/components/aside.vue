@@ -82,7 +82,7 @@
           <i class="iconfont icon-user-cog"></i>
           <span slot="title">职员信息查询</span>
         </el-menu-item>
-        <el-submenu index="4" v-if="auth == 4 || auth == 1">
+        <el-submenu index="4" v-if="auth == 4 || auth == 1 || auth == 7">
           <template slot="title">
             <i class="iconfont icon-introduction"></i>
             <span slot="title">酒店介绍</span>
@@ -96,7 +96,7 @@
             <span slot="title">修改酒店信息</span>
           </el-menu-item>
         </el-submenu>
-        <el-menu-item index="/home/hotelInfo" class="firstMenu" v-if="auth == 2 || auth == 3 || auth > 4">
+        <el-menu-item index="/home/hotelInfo" class="firstMenu" v-if="auth == 2 || auth == 3 || (auth > 4 && auth < 7)">
           <i class="iconfont icon-gaikuang"></i>
           <span slot="title">酒店概况</span>
         </el-menu-item>
@@ -141,7 +141,7 @@
           <span slot="title">入住信息管理</span>
         </el-menu-item>
         <el-menu-item index="/statistics" class="firstMenu" v-if="auth == 1 || auth == 6">
-          <i class="iconfont icon-lishi"></i>
+          <i class="iconfont icon-shouru-copy"></i>
           <span slot="title">收入统计汇总</span>
         </el-menu-item>
         <el-menu-item index="/historicalOrder" class="firstMenu" v-if="auth == 2 || auth == 1 || auth == 6 || auth == 5">
@@ -152,7 +152,7 @@
           <i class="iconfont icon-rizhi"></i>
           <span slot="title">日志管理</span>
         </el-menu-item>
-        <el-submenu index="7" >
+        <el-submenu index="7" v-if="auth == 4 || auth == 7">
           <template slot="title">
             <i class="iconfont icon-guanli"></i>
             <span slot="title">资讯管理</span>
@@ -165,11 +165,27 @@
             <i class="iconfont icon-zixun"></i>
             <span slot="title">资讯列表</span>
           </el-menu-item>
-          <el-menu-item index="/checkArticle">
+          <el-menu-item index="/checkArticle" v-if="auth == 4">
             <i class="iconfont icon-zixun1"></i>
             <span slot="title">审核资讯</span>
           </el-menu-item>
         </el-submenu>
+        <el-menu-item index="/comment" class="firstMenu" v-if="auth == 1 || auth == 4 || auth == 7">
+          <i class="iconfont icon-pinglun"></i>
+          <span slot="title">评论管理</span>
+        </el-menu-item>
+        <el-menu-item index="/response" class="firstMenu" v-if="auth == 1 || auth == 4 || auth == 7">
+          <i class="iconfont icon-huifu"></i>
+          <span slot="title">回复管理</span>
+        </el-menu-item>
+        <el-menu-item index="/information" class="firstMenu" v-if="(auth > 0 && auth < 4) || (auth > 4 && auth < 7)">
+          <i class="iconfont icon-zixun"></i>
+          <span slot="title">酒店资讯</span>
+        </el-menu-item>
+        <el-menu-item index="/myComment" class="firstMenu">
+          <i class="iconfont icon-wodepinglun"></i>
+          <span slot="title">我的评论</span>
+        </el-menu-item>
         <el-submenu index="8">
           <template slot="title">
             <i class="el-icon-user"></i>
@@ -330,5 +346,10 @@ export default {
 .iconfont {
   margin: 0 10px 0 5px;
   font-size: 18px;
+}
+
+.el-menu-item, .el-submenu__title {
+  height: 43px;
+  line-height: 43px;
 }
 </style>

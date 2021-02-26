@@ -212,7 +212,7 @@ export default {
             return;
           }
 
-          if (res.data.auth == 7) {
+          if (res.data.auth == 8) {
             this.$toast.clear();
             this.$message({
               showClose: true,
